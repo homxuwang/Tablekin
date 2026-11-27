@@ -1,3 +1,5 @@
 {
-  "navigationBarTitleText": "加入厨房"
+  "navigationBarTitleText": "加入厨房",
+  "navigationBarBackgroundColor": "#D95712",
+  "navigationBarTextStyle": "white"
 }

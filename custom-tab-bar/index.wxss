@@ -1,18 +1,22 @@
 .bar {
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left: 28rpx;
+  right: 28rpx;
+  bottom: calc(20rpx + constant(safe-area-inset-bottom));
+  bottom: calc(20rpx + env(safe-area-inset-bottom));
   z-index: 100;
-  background: #FFFFFF;
-  border-top: 2rpx solid #EDEEF1;
-  padding-bottom: constant(safe-area-inset-bottom);
-  padding-bottom: env(safe-area-inset-bottom);
+  background: rgba(255, 253, 249, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1rpx solid rgba(60, 42, 24, 0.08);
+  border-radius: 999rpx;
+  box-shadow: 0 14rpx 38rpx rgba(38, 24, 12, 0.12), 0 2rpx 8rpx rgba(38, 24, 12, 0.05);
+  padding: 10rpx 12rpx;
 }
 
 .bar-content {
   display: flex;
-  height: 108rpx;
+  height: 98rpx;
 }
 
 .item {
@@ -22,11 +26,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #9AA1A9;
+  color: #9E938A;
+  border-radius: 999rpx;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.14s ease;
+}
+
+.item:active {
+  transform: scale(0.95);
 }
 
 .item.on {
-  color: #E86A17;
+  color: #DF5E16;
+  background: #FFF1E5;
 }
 
 .ic {
@@ -48,10 +59,10 @@
 .ic-eat .s1 {
   display: block;
   left: 5rpx;
-  top: 13rpx;
+  top: 14rpx;
   width: 34rpx;
   height: 18rpx;
-  border: 3rpx solid currentColor;
+  border: 3.5rpx solid currentColor;
   border-top: none;
   border-radius: 0 0 20rpx 20rpx;
 }
@@ -59,21 +70,21 @@
 .ic-eat .s2 {
   display: block;
   left: 2rpx;
-  top: 10rpx;
+  top: 11rpx;
   width: 40rpx;
-  height: 3rpx;
-  border-radius: 3rpx;
+  height: 3.5rpx;
+  border-radius: 4rpx;
   background: currentColor;
 }
 
 /* 下厨：一口锅 */
 .ic-cook .s1 {
   display: block;
-  left: 2rpx;
+  left: 3rpx;
   top: 9rpx;
-  width: 28rpx;
-  height: 28rpx;
-  border: 3rpx solid currentColor;
+  width: 27rpx;
+  height: 27rpx;
+  border: 3.5rpx solid currentColor;
   border-radius: 50%;
 }
 
@@ -81,9 +92,9 @@
   display: block;
   left: 28rpx;
   top: 17rpx;
-  width: 15rpx;
-  height: 3rpx;
-  border-radius: 3rpx;
+  width: 14rpx;
+  height: 3.5rpx;
+  border-radius: 4rpx;
   background: currentColor;
 }
 
@@ -94,8 +105,8 @@
   top: 5rpx;
   width: 30rpx;
   height: 32rpx;
-  border: 3rpx solid currentColor;
-  border-radius: 6rpx;
+  border: 3.5rpx solid currentColor;
+  border-radius: 7rpx;
 }
 
 .ic-order .s2 {
@@ -103,8 +114,8 @@
   left: 14rpx;
   top: 14rpx;
   width: 16rpx;
-  height: 3rpx;
-  border-radius: 3rpx;
+  height: 3.5rpx;
+  border-radius: 4rpx;
   background: currentColor;
 }
 
@@ -112,32 +123,39 @@
   display: block;
   left: 14rpx;
   top: 23rpx;
-  width: 16rpx;
-  height: 3rpx;
-  border-radius: 3rpx;
+  width: 12rpx;
+  height: 3.5rpx;
+  border-radius: 4rpx;
   background: currentColor;
 }
 
 .label {
-  font-size: 20rpx;
-  margin-top: 8rpx;
-  height: 28rpx;
-  line-height: 28rpx;
+  font-size: 21rpx;
+  font-weight: 500;
+  margin-top: 6rpx;
+  height: 26rpx;
+  line-height: 26rpx;
   flex-shrink: 0;
   white-space: nowrap;
+}
+
+.item.on .label {
+  font-weight: 600;
 }
 
 .badge {
   position: absolute;
   top: -8rpx;
   right: -24rpx;
-  min-width: 26rpx;
-  padding: 3rpx 7rpx;
-  background: #D64545;
-  border: 3rpx solid #FFFFFF;
+  min-width: 28rpx;
+  padding: 2rpx 8rpx;
+  background: linear-gradient(135deg, #E5484D 0%, #C93035 100%);
+  border: 3rpx solid #FFFDF9;
   border-radius: 999rpx;
   color: #FFFFFF;
   font-size: 18rpx;
+  font-weight: 700;
   line-height: 24rpx;
   text-align: center;
+  box-shadow: 0 4rpx 10rpx rgba(214, 69, 69, 0.32);
 }

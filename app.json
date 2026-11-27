@@ -17,17 +17,17 @@
   ],
   "window": {
     "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarBackgroundColor": "#F7F4EF",
     "navigationBarTitleText": "吃好喝好",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#F5F6F8"
+    "backgroundColor": "#F7F4EF"
   },
   "tabBar": {
     "custom": true,
-    "color": "#9AA1A9",
-    "selectedColor": "#E86A17",
-    "backgroundColor": "#FFFFFF",
-    "borderStyle": "black",
+    "color": "#9E938A",
+    "selectedColor": "#DF5E16",
+    "backgroundColor": "#FFFDF9",
+    "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/home/home",

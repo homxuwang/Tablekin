@@ -1,51 +1,66 @@
 .page {
-  padding-bottom: 160rpx;
+  padding-bottom: 200rpx;
 }
 
 .hero {
-  background: linear-gradient(135deg, #E86A17 0%, #F2913F 100%);
-  padding: 40rpx 30rpx 40rpx;
-  border-radius: 0 0 32rpx 32rpx;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 224, 184, 0.34) 0%, rgba(255, 224, 184, 0) 52%),
+    linear-gradient(145deg, #D95712 0%, #EA7326 60%, #F49242 100%);
+  padding: 28rpx 32rpx 48rpx;
+  border-radius: 0 0 40rpx 40rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-shadow: 0 14rpx 32rpx rgba(217, 87, 18, 0.18);
 }
 
 .hero-text {
   flex: 1;
   min-width: 0;
+  padding-right: 20rpx;
 }
 
 .hero-title {
-  font-size: 42rpx;
-  font-weight: 600;
+  font-size: 46rpx;
+  font-weight: 700;
   color: #FFFFFF;
-  letter-spacing: 2rpx;
+  letter-spacing: 1rpx;
 }
 
 .hero-sub {
   font-size: 25rpx;
-  color: rgba(255, 255, 255, 0.86);
+  color: rgba(255, 255, 255, 0.88);
   margin-top: 10rpx;
+  line-height: 1.5;
 }
 
 .hero-search {
-  width: 76rpx;
-  height: 76rpx;
+  width: 82rpx;
+  height: 82rpx;
   flex-shrink: 0;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.22);
+  border: 2rpx solid rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.14s ease, background 0.14s ease;
+}
+
+.hero-search:active {
+  transform: scale(0.92);
+  background: rgba(255, 255, 255, 0.32);
 }
 
 .banner {
-  margin: 20rpx 24rpx 0;
+  margin: 22rpx 24rpx 0;
   padding: 22rpx 26rpx;
-  background: #FFF4EC;
-  color: #C05510;
-  border-radius: 16rpx;
+  background: #FFF3E8;
+  color: #B84C0E;
+  border: 1rpx solid #F8D3B4;
+  border-radius: 22rpx;
   font-size: 26rpx;
   line-height: 1.6;
 }
@@ -53,42 +68,50 @@
 /* 上次点菜的地方 */
 .resume {
   margin: 24rpx 24rpx 0;
-  padding: 22rpx 24rpx;
-  background: #FFFFFF;
-  border-radius: 20rpx;
+  padding: 24rpx 26rpx;
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFF8F1 100%);
+  border-radius: 26rpx;
   display: flex;
   align-items: center;
-  border: 2rpx solid #FBE0CB;
+  border: 2rpx solid #F8D8BC;
+  box-shadow: 0 10rpx 28rpx rgba(223, 94, 22, 0.08);
+  transition: transform 0.14s ease;
+}
+
+.resume:active {
+  transform: scale(0.988);
 }
 
 .resume-avatar {
-  width: 76rpx;
-  height: 76rpx;
-  border-radius: 22rpx;
-  background: #FDEEE2;
-  color: #E86A17;
-  font-size: 32rpx;
-  font-weight: 600;
-  line-height: 76rpx;
+  width: 82rpx;
+  height: 82rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(135deg, #F48A3E 0%, #DF5E16 100%);
+  color: #FFFFFF;
+  font-size: 34rpx;
+  font-weight: 700;
+  line-height: 82rpx;
   text-align: center;
   flex-shrink: 0;
+  box-shadow: 0 8rpx 18rpx rgba(223, 94, 22, 0.24);
 }
 
 .resume-main {
   flex: 1;
   min-width: 0;
-  padding: 0 20rpx;
+  padding: 0 22rpx;
 }
 
 .resume-label {
   font-size: 22rpx;
-  color: #B08A6C;
+  font-weight: 500;
+  color: #C77A44;
 }
 
 .resume-name {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #23282F;
+  font-size: 31rpx;
+  font-weight: 700;
+  color: #1F1A17;
   margin-top: 6rpx;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -96,41 +119,55 @@
 }
 
 .resume-go {
-  font-size: 25rpx;
-  color: #E86A17;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #DF5E16;
+  background: #FFF0E3;
+  padding: 10rpx 22rpx;
+  border-radius: 999rpx;
   flex-shrink: 0;
 }
 
 .section-title {
-  padding: 32rpx 32rpx 14rpx;
-  font-size: 28rpx;
-  color: #5C646E;
-  font-weight: 600;
+  padding: 36rpx 32rpx 16rpx;
+  font-size: 27rpx;
+  color: #7D7168;
+  font-weight: 700;
+  letter-spacing: 0.6rpx;
 }
 
 .hint {
   margin: 0 24rpx;
-  padding: 44rpx 28rpx;
+  padding: 56rpx 32rpx;
   background: #FFFFFF;
-  border-radius: 20rpx;
+  border-radius: 26rpx;
+  border: 1rpx solid rgba(60, 42, 24, 0.06);
+  box-shadow: 0 8rpx 26rpx rgba(42, 28, 16, 0.04);
   text-align: center;
-  color: #9AA1A9;
-  font-size: 26rpx;
-  line-height: 1.7;
+  color: #8F847B;
+  font-size: 27rpx;
+  line-height: 1.75;
 }
 
 .hint-sub {
-  margin-top: 8rpx;
+  margin-top: 10rpx;
   font-size: 24rpx;
-  color: #B4B9C0;
+  color: #ADA299;
 }
 
 /* 进行中的点单 */
 .ocard {
   margin: 0 24rpx 20rpx;
-  padding: 24rpx;
+  padding: 26rpx 28rpx;
   background: #FFFFFF;
-  border-radius: 20rpx;
+  border-radius: 26rpx;
+  border: 1rpx solid rgba(60, 42, 24, 0.06);
+  box-shadow: 0 8rpx 28rpx rgba(42, 28, 16, 0.05);
+  transition: transform 0.14s ease;
+}
+
+.ocard:active {
+  transform: scale(0.988);
 }
 
 .ocard-top {
@@ -140,91 +177,102 @@
 }
 
 .ocard-kitchen {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #23282F;
+  font-size: 31rpx;
+  font-weight: 700;
+  color: #1F1A17;
 }
 
 .ocard-line {
-  font-size: 25rpx;
-  color: #5C646E;
-  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #544B44;
+  margin-top: 14rpx;
+  line-height: 1.5;
 }
 
 .ocard-dim {
-  color: #9AA1A9;
+  color: #9E938A;
   font-size: 24rpx;
+  margin-top: 8rpx;
 }
 
 .status {
   font-size: 22rpx;
-  border-radius: 8rpx;
-  padding: 6rpx 14rpx;
+  font-weight: 600;
+  border-radius: 999rpx;
+  padding: 8rpx 18rpx;
   flex-shrink: 0;
 }
 
 .st-wait {
-  color: #B4610F;
-  background: #FFF4E8;
+  color: #C2670E;
+  background: #FEF4E6;
 }
 
 .st-ack {
-  color: #1D6FA5;
-  background: #EAF3FB;
+  color: #2563EB;
+  background: #EDF4FF;
 }
 
 .st-doing {
-  color: #1D9E75;
-  background: #E9F7F1;
+  color: #158059;
+  background: #EAF8F1;
 }
 
 .st-done {
-  color: #5C646E;
-  background: #EFF1F4;
+  color: #685E56;
+  background: #F2EFEA;
 }
 
 .st-off {
-  color: #A32D2D;
-  background: #FCEBEB;
+  color: #C83737;
+  background: #FEEFEF;
 }
 
 /* 厨房卡片 */
 .kcard {
   margin: 0 24rpx 20rpx;
-  padding: 26rpx;
+  padding: 28rpx 26rpx;
   background: #FFFFFF;
-  border-radius: 20rpx;
+  border-radius: 26rpx;
+  border: 1rpx solid rgba(60, 42, 24, 0.06);
+  box-shadow: 0 8rpx 28rpx rgba(42, 28, 16, 0.048);
   display: flex;
   align-items: center;
+  transition: transform 0.14s ease;
+}
+
+.kcard:active {
+  transform: scale(0.988);
 }
 
 .kcard-dim {
-  opacity: 0.72;
+  opacity: 0.7;
 }
 
 .kcard-avatar {
-  width: 84rpx;
-  height: 84rpx;
-  border-radius: 24rpx;
-  background: #FDEEE2;
-  color: #E86A17;
-  font-size: 34rpx;
-  font-weight: 600;
-  line-height: 84rpx;
+  width: 92rpx;
+  height: 92rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(135deg, #F69247 0%, #DF5E16 100%);
+  color: #FFFFFF;
+  font-size: 38rpx;
+  font-weight: 700;
+  line-height: 92rpx;
   text-align: center;
   flex-shrink: 0;
+  box-shadow: 0 10rpx 22rpx rgba(223, 94, 22, 0.22);
 }
 
 .kcard-main {
   flex: 1;
   min-width: 0;
-  padding: 0 20rpx;
+  padding: 0 22rpx;
 }
 
 .kcard-name {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #23282F;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1F1A17;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -232,7 +280,7 @@
 
 .kcard-sub {
   font-size: 24rpx;
-  color: #8A9099;
+  color: #8A7E74;
   margin-top: 8rpx;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -240,32 +288,36 @@
 }
 
 .kcard-tags {
-  margin-top: 12rpx;
+  margin-top: 14rpx;
 }
 
 .tag {
   font-size: 22rpx;
-  color: #1D9E75;
-  background: #E9F7F1;
-  border-radius: 8rpx;
-  padding: 4rpx 12rpx;
+  font-weight: 600;
+  color: #158059;
+  background: #EAF8F1;
+  border-radius: 999rpx;
+  padding: 6rpx 16rpx;
 }
 
 .kcard-go {
-  font-size: 25rpx;
-  color: #E86A17;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #DF5E16;
+  background: #FFF1E5;
+  padding: 12rpx 24rpx;
+  border-radius: 999rpx;
   flex-shrink: 0;
-  padding-left: 12rpx;
 }
 
 .list-foot {
-  margin: 8rpx 24rpx 0;
+  margin: 18rpx 32rpx 0;
   font-size: 23rpx;
-  color: #A6ACB4;
+  color: #ADA299;
   text-align: center;
   line-height: 1.7;
 }
 
 .actions {
-  padding: 8rpx 32rpx 0;
+  padding: 20rpx 32rpx 0;
 }

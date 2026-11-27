@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "厨房管理",
+  "navigationBarBackgroundColor": "#D95712",
+  "navigationBarTextStyle": "white",
   "enablePullDownRefresh": true,
   "backgroundTextStyle": "dark"
 }

@@ -1,49 +1,63 @@
 .page {
-  padding-bottom: 160rpx;
+  padding-bottom: 200rpx;
 }
 
 .hero {
-  background: linear-gradient(135deg, #E86A17 0%, #F2913F 100%);
-  padding: 40rpx 30rpx 40rpx;
-  border-radius: 0 0 32rpx 32rpx;
+  background:
+    radial-gradient(circle at 86% 14%, rgba(255, 224, 184, 0.32) 0%, rgba(255, 224, 184, 0) 50%),
+    linear-gradient(145deg, #D95712 0%, #EA7326 60%, #F49242 100%);
+  padding: 28rpx 32rpx 48rpx;
+  border-radius: 0 0 40rpx 40rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-shadow: 0 14rpx 32rpx rgba(217, 87, 18, 0.18);
 }
 
 .hero-text {
   flex: 1;
   min-width: 0;
+  padding-right: 16rpx;
 }
 
 .hero-title {
-  font-size: 42rpx;
-  font-weight: 600;
+  font-size: 46rpx;
+  font-weight: 700;
   color: #FFFFFF;
-  letter-spacing: 2rpx;
+  letter-spacing: 1rpx;
 }
 
 .hero-sub {
   font-size: 25rpx;
-  color: rgba(255, 255, 255, 0.86);
+  color: rgba(255, 255, 255, 0.88);
   margin-top: 10rpx;
 }
 
 .hero-add {
   flex-shrink: 0;
   font-size: 26rpx;
+  font-weight: 600;
   color: #FFFFFF;
   background: rgba(255, 255, 255, 0.22);
+  border: 2rpx solid rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: 999rpx;
-  padding: 14rpx 26rpx;
+  padding: 14rpx 28rpx;
+  transition: transform 0.14s ease;
+}
+
+.hero-add:active {
+  transform: scale(0.94);
 }
 
 .banner {
-  margin: 20rpx 24rpx 0;
+  margin: 22rpx 24rpx 0;
   padding: 22rpx 26rpx;
-  background: #FFF4EC;
-  color: #C05510;
-  border-radius: 16rpx;
+  background: #FFF3E8;
+  border: 1rpx solid #F8D3B4;
+  color: #B84C0E;
+  border-radius: 22rpx;
   font-size: 26rpx;
   line-height: 1.6;
 }
@@ -51,16 +65,22 @@
 /* 待处理 */
 .todo {
   margin: 24rpx 24rpx 0;
-  padding: 24rpx;
-  background: #FFFFFF;
-  border-radius: 20rpx;
-  border: 2rpx solid #FBE0CB;
+  padding: 26rpx 28rpx;
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFF8F0 100%);
+  border-radius: 26rpx;
+  border: 2rpx solid #F8D7BA;
+  box-shadow: 0 10rpx 26rpx rgba(223, 94, 22, 0.08);
+  transition: transform 0.14s ease;
+}
+
+.todo:active {
+  transform: scale(0.988);
 }
 
 .todo-head {
-  font-size: 26rpx;
-  color: #E86A17;
-  font-weight: 600;
+  font-size: 27rpx;
+  color: #DF5E16;
+  font-weight: 700;
 }
 
 .todo-row {
@@ -68,54 +88,67 @@
   align-items: center;
   justify-content: space-between;
   margin-top: 16rpx;
+  padding-top: 14rpx;
+  border-top: 1rpx solid #F6E6D7;
 }
 
 .todo-name {
-  font-size: 28rpx;
-  color: #23282F;
+  font-size: 29rpx;
+  font-weight: 600;
+  color: #1F1A17;
 }
 
 .todo-text {
   font-size: 24rpx;
-  color: #B4610F;
+  font-weight: 600;
+  color: #C2670E;
+  background: #FEF3E2;
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
 }
 
 .todo-go {
   margin-top: 20rpx;
   font-size: 25rpx;
-  color: #E86A17;
+  font-weight: 600;
+  color: #DF5E16;
   text-align: right;
 }
 
 .section-title {
-  padding: 32rpx 32rpx 14rpx;
-  font-size: 28rpx;
-  color: #5C646E;
-  font-weight: 600;
+  padding: 36rpx 32rpx 16rpx;
+  font-size: 27rpx;
+  color: #7D7168;
+  font-weight: 700;
+  letter-spacing: 0.6rpx;
 }
 
 .hint {
   margin: 0 24rpx;
-  padding: 44rpx 28rpx;
+  padding: 56rpx 32rpx;
   background: #FFFFFF;
-  border-radius: 20rpx;
+  border-radius: 26rpx;
+  border: 1rpx solid rgba(60, 42, 24, 0.06);
+  box-shadow: 0 8rpx 26rpx rgba(42, 28, 16, 0.04);
   text-align: center;
-  color: #9AA1A9;
-  font-size: 26rpx;
-  line-height: 1.7;
+  color: #8F847B;
+  font-size: 27rpx;
+  line-height: 1.75;
 }
 
 .hint-sub {
-  margin-top: 8rpx;
+  margin-top: 10rpx;
   font-size: 24rpx;
-  color: #B4B9C0;
+  color: #ADA299;
 }
 
 .kcard {
-  margin: 0 24rpx 20rpx;
-  padding: 26rpx;
+  margin: 0 24rpx 22rpx;
+  padding: 28rpx 26rpx;
   background: #FFFFFF;
-  border-radius: 20rpx;
+  border-radius: 26rpx;
+  border: 1rpx solid rgba(60, 42, 24, 0.06);
+  box-shadow: 0 8rpx 28rpx rgba(42, 28, 16, 0.05);
 }
 
 .kcard-head {
@@ -124,28 +157,29 @@
 }
 
 .kcard-avatar {
-  width: 84rpx;
-  height: 84rpx;
-  border-radius: 24rpx;
-  background: #FDEEE2;
-  color: #E86A17;
-  font-size: 34rpx;
-  font-weight: 600;
-  line-height: 84rpx;
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 26rpx;
+  background: linear-gradient(135deg, #F69247 0%, #DF5E16 100%);
+  color: #FFFFFF;
+  font-size: 36rpx;
+  font-weight: 700;
+  line-height: 90rpx;
   text-align: center;
   flex-shrink: 0;
+  box-shadow: 0 10rpx 20rpx rgba(223, 94, 22, 0.22);
 }
 
 .kcard-main {
   flex: 1;
   min-width: 0;
-  padding-left: 20rpx;
+  padding-left: 22rpx;
 }
 
 .kcard-name {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #23282F;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1F1A17;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -153,40 +187,47 @@
 
 .kcard-sub {
   font-size: 24rpx;
-  color: #8A9099;
+  color: #8A7E74;
   margin-top: 8rpx;
 }
 
 .tag {
   margin-left: 12rpx;
-  padding: 2rpx 12rpx;
-  font-size: 20rpx;
-  font-weight: 400;
-  color: #E86A17;
-  background: #FDEEE2;
+  padding: 4rpx 14rpx;
+  font-size: 21rpx;
+  font-weight: 600;
+  color: #DF5E16;
+  background: #FFF1E5;
   border-radius: 999rpx;
 }
 
 .kcard-tools {
   display: flex;
   align-items: center;
-  margin-top: 22rpx;
+  margin-top: 24rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #F4EFE8;
 }
 
 .chip {
   flex: 1;
   margin-right: 12rpx;
   padding: 0;
-  height: 62rpx;
-  line-height: 58rpx;
+  height: 64rpx;
+  line-height: 60rpx;
   font-size: 24rpx;
-  font-weight: 400;
+  font-weight: 600;
   text-align: center;
-  color: #6B727B;
-  background: #FFFFFF;
-  border: 2rpx solid #E5E7EA;
+  color: #5C534C;
+  background: #FAF7F2;
+  border: 1.5rpx solid #EAE2D9;
   border-radius: 999rpx;
   overflow: hidden;
+  transition: transform 0.14s ease;
+}
+
+.chip:active {
+  transform: scale(0.95);
 }
 
 .chip:last-child {
@@ -195,28 +236,30 @@
 
 .chip-main {
   color: #FFFFFF;
-  background: #E86A17;
-  border-color: #E86A17;
+  background: linear-gradient(135deg, #E2621A 0%, #F18335 100%);
+  border-color: transparent;
+  box-shadow: 0 6rpx 16rpx rgba(223, 94, 22, 0.24);
 }
 
 .chip-share {
-  color: #E86A17;
-  border-color: #F3C9A8;
+  color: #DF5E16;
+  background: #FFF5EC;
+  border-color: #F4CCB0;
 }
 
 .actions {
-  padding: 12rpx 32rpx 0;
+  padding: 18rpx 32rpx 0;
 }
 
 .actions .btn-ghost {
   margin-top: 20rpx;
   font-size: 28rpx;
-  padding: 22rpx 0;
+  padding: 24rpx 0;
 }
 
 .foot-hint {
-  margin: 28rpx 24rpx 0;
+  margin: 30rpx 24rpx 0;
   font-size: 23rpx;
-  color: #A6ACB4;
+  color: #ADA299;
   text-align: center;
 }

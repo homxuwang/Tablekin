@@ -1,6 +1,8 @@
 {
   "usingComponents": {},
   "navigationBarTitleText": "下厨",
+  "navigationBarBackgroundColor": "#D95712",
+  "navigationBarTextStyle": "white",
   "enablePullDownRefresh": true,
   "backgroundTextStyle": "dark"
 }

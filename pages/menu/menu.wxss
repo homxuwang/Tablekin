@@ -2,12 +2,16 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #F5F6F8;
+  background: #F7F4EF;
 }
 
 .header {
   background: #FFFFFF;
-  padding: 24rpx 32rpx 20rpx;
+  padding: 20rpx 30rpx 22rpx;
+  border-bottom: 1rpx solid rgba(60, 42, 24, 0.06);
+  box-shadow: 0 6rpx 20rpx rgba(42, 28, 16, 0.03);
+  position: relative;
+  z-index: 4;
 }
 
 .header-top {
@@ -24,28 +28,35 @@
 }
 
 .title {
-  font-size: 38rpx;
-  font-weight: 600;
-  color: #23282F;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #1F1A17;
+  letter-spacing: -0.4rpx;
 }
 
 .subtitle {
   font-size: 24rpx;
-  color: #8A9099;
+  color: #8F847B;
   margin-top: 8rpx;
 }
 
 /* 放大镜：在菜单页也能直接搜这个厨房的菜、或者搜别的厨房 */
 .header-search {
-  width: 68rpx;
-  height: 68rpx;
+  width: 74rpx;
+  height: 74rpx;
   flex-shrink: 0;
   margin-left: 20rpx;
   border-radius: 50%;
-  background: #FDEEE2;
+  background: #FFF1E5;
+  border: 1rpx solid #F8D4B7;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.14s ease;
+}
+
+.header-search:active {
+  transform: scale(0.92);
 }
 
 .header-tools {
@@ -55,41 +66,53 @@
 }
 
 .header-btn {
-  font-size: 26rpx;
-  color: #E86A17;
-  border: 2rpx solid #F3C9A8;
+  font-size: 25rpx;
+  font-weight: 600;
+  color: #DF5E16;
+  background: #FFF5EC;
+  border: 1.5rpx solid #F4CCB0;
   border-radius: 999rpx;
-  padding: 12rpx 24rpx;
+  padding: 12rpx 26rpx;
   margin-right: 14rpx;
+  transition: transform 0.14s ease;
+}
+
+.header-btn:active {
+  transform: scale(0.95);
 }
 
 .header-btn-soft {
-  color: #6B727B;
-  border-color: #E5E7EA;
+  color: #685E56;
+  background: #F7F4EF;
+  border-color: #E7DFD6;
 }
 
 .banner {
-  margin: 16rpx 32rpx 0;
+  margin: 16rpx 24rpx 0;
   padding: 20rpx 24rpx;
-  background: #FDECEC;
-  color: #C0392B;
-  border-radius: 14rpx;
-  font-size: 26rpx;
+  background: #FEF0F0;
+  border: 1rpx solid #F8CBCB;
+  color: #C83737;
+  border-radius: 18rpx;
+  font-size: 25rpx;
 }
 
 .banner-go {
   margin-top: 14rpx;
-  color: #E86A17;
+  color: #DF5E16;
   font-size: 26rpx;
+  font-weight: 600;
 }
 
 .notice {
-  margin: 16rpx 32rpx 0;
+  margin: 16rpx 24rpx 0;
   padding: 18rpx 24rpx;
-  background: #FFF4E8;
-  color: #B4610F;
-  border-radius: 14rpx;
-  font-size: 25rpx;
+  background: #FEF5E7;
+  border: 1rpx solid #F7D9B4;
+  color: #B45D0E;
+  border-radius: 18rpx;
+  font-size: 24rpx;
+  font-weight: 500;
 }
 
 .body {
@@ -99,22 +122,36 @@
 }
 
 .cats {
-  width: 196rpx;
+  width: 192rpx;
   height: 100%;
-  background: #EFF1F4;
+  background: #EFEAE2;
 }
 
 .cat {
-  padding: 32rpx 16rpx;
-  font-size: 28rpx;
-  color: #5C646E;
+  position: relative;
+  padding: 32rpx 18rpx;
+  font-size: 26rpx;
+  color: #6E645C;
   text-align: center;
+  line-height: 1.4;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
 .cat-on {
-  background: #FFFFFF;
-  color: #E86A17;
-  font-weight: 600;
+  background: #F7F4EF;
+  color: #DF5E16;
+  font-weight: 700;
+}
+
+.cat-on::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 26%;
+  bottom: 26%;
+  width: 8rpx;
+  border-radius: 0 8rpx 8rpx 0;
+  background: linear-gradient(180deg, #E2621A 0%, #F28637 100%);
 }
 
 .cats-tail {
@@ -124,20 +161,22 @@
 .dishlist {
   flex: 1;
   height: 100%;
-  padding: 20rpx 24rpx 0;
+  padding: 20rpx 20rpx 0;
 }
 
 .dish {
   display: flex;
   align-items: center;
   background: #FFFFFF;
-  border-radius: 20rpx;
+  border-radius: 24rpx;
+  border: 1rpx solid rgba(60, 42, 24, 0.055);
+  box-shadow: 0 6rpx 22rpx rgba(42, 28, 16, 0.045);
   padding: 20rpx;
-  margin-bottom: 20rpx;
+  margin-bottom: 18rpx;
 }
 
 .dish-off .dish-hit {
-  opacity: 0.5;
+  opacity: 0.52;
 }
 
 .dish-hit {
@@ -148,20 +187,22 @@
 }
 
 .cover {
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 16rpx;
+  width: 132rpx;
+  height: 132rpx;
+  border-radius: 20rpx;
   flex-shrink: 0;
-  background: #F5F6F8;
+  background: #F4EFE8;
+  box-shadow: 0 4rpx 14rpx rgba(42, 28, 16, 0.07);
 }
 
 .cover-plain {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #FFF1E6;
-  color: #E86A17;
-  font-size: 46rpx;
+  background: linear-gradient(135deg, #FFF3E6 0%, #FCE1C8 100%);
+  color: #DF5E16;
+  font-size: 48rpx;
+  font-weight: 700;
 }
 
 .dish-main {
@@ -171,23 +212,29 @@
 }
 
 .dish-name {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #23282F;
+  font-size: 31rpx;
+  font-weight: 700;
+  color: #1F1A17;
+  line-height: 1.35;
 }
 
 .dish-desc {
-  font-size: 24rpx;
-  color: #8A9099;
+  font-size: 23rpx;
+  color: #8A7E74;
   margin-top: 8rpx;
-  line-height: 1.5;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 /* ---------- 标签筛选条 ---------- */
 
 .tagbar {
   background: #FFFFFF;
-  padding: 0 24rpx 16rpx;
+  padding: 14rpx 24rpx 18rpx;
+  border-bottom: 1rpx solid rgba(60, 42, 24, 0.05);
 }
 
 .tagbar-scroll {
@@ -203,26 +250,30 @@
 .tagpick {
   display: inline-block;
   font-size: 24rpx;
-  color: #5A616B;
-  background: #F2F3F6;
+  font-weight: 500;
+  color: #685E56;
+  background: #F5F1EB;
   border-radius: 999rpx;
-  padding: 10rpx 22rpx;
-  margin-right: 14rpx;
+  padding: 10rpx 24rpx;
+  margin-right: 12rpx;
   flex-shrink: 0;
+  transition: all 0.14s ease;
 }
 
 .tagpick-on {
   color: #FFFFFF;
-  background: #E86A17;
+  font-weight: 600;
+  background: linear-gradient(135deg, #E2621A 0%, #F18335 100%);
+  box-shadow: 0 6rpx 16rpx rgba(223, 94, 22, 0.24);
 }
 
 .tagpick-on .tagpick-count {
-  color: #FFE3CE;
+  color: #FFE4CE;
 }
 
 .tagpick-count {
   font-size: 20rpx;
-  color: #9AA1A9;
+  color: #9E938A;
   margin-left: 8rpx;
 }
 
@@ -234,91 +285,124 @@
 
 .label {
   font-size: 20rpx;
-  color: #E86A17;
-  background: #FFF1E6;
-  border-radius: 6rpx;
-  padding: 3rpx 10rpx;
+  font-weight: 500;
+  color: #DF5E16;
+  background: #FFF2E6;
+  border-radius: 8rpx;
+  padding: 4rpx 12rpx;
   margin: 0 8rpx 8rpx 0;
 }
 
 .dish-tags {
-  margin-top: 12rpx;
+  margin-top: 10rpx;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .tag {
-  font-size: 22rpx;
-  color: #1D9E75;
-  background: #E9F7F1;
+  font-size: 21rpx;
+  font-weight: 600;
+  color: #158059;
+  background: #EAF8F1;
   border-radius: 8rpx;
   padding: 4rpx 12rpx;
-  margin-right: 10rpx;
+  margin: 0 8rpx 6rpx 0;
 }
 
 .tag-stock {
-  color: #2C6BB3;
-  background: #EAF2FB;
+  color: #2563EB;
+  background: #EDF4FF;
 }
 
 .tag-off {
-  color: #A32D2D;
-  background: #FCEBEB;
+  color: #C83737;
+  background: #FEEFEF;
 }
 
 .add {
   width: 64rpx;
   height: 64rpx;
   border-radius: 50%;
-  background: #E86A17;
+  background: linear-gradient(135deg, #E2621A 0%, #F28536 100%);
   color: #FFFFFF;
-  font-size: 42rpx;
-  line-height: 64rpx;
+  font-size: 40rpx;
+  font-weight: 500;
+  line-height: 60rpx;
   text-align: center;
   flex-shrink: 0;
+  box-shadow: 0 8rpx 18rpx rgba(223, 94, 22, 0.28);
+  transition: transform 0.12s ease;
+}
+
+.add:active {
+  transform: scale(0.88);
 }
 
 .add-off {
-  background: #E4E6EA;
-  color: #FFFFFF;
+  background: #E7E2DB;
+  color: #A2978E;
+  box-shadow: none;
 }
 
 .list-tail {
-  height: 180rpx;
+  height: 200rpx;
 }
 
 .cartbar {
   position: fixed;
-  left: 24rpx;
-  right: 24rpx;
-  bottom: 24rpx;
-  background: #23282F;
+  left: 28rpx;
+  right: 28rpx;
+  bottom: calc(24rpx + constant(safe-area-inset-bottom));
+  bottom: calc(24rpx + env(safe-area-inset-bottom));
+  background: rgba(31, 26, 23, 0.94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border-radius: 999rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16rpx 16rpx 16rpx 36rpx;
+  padding: 14rpx 14rpx 14rpx 34rpx;
+  box-shadow: 0 18rpx 42rpx rgba(25, 16, 10, 0.28);
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  z-index: 30;
 }
 
 .cartbar-left {
   display: flex;
-  align-items: baseline;
+  align-items: center;
 }
 
 .cartbar-count {
   color: #FFFFFF;
-  font-size: 38rpx;
-  font-weight: 600;
+  background: #DF5E16;
+  font-size: 30rpx;
+  font-weight: 700;
+  min-width: 52rpx;
+  height: 52rpx;
+  line-height: 52rpx;
+  text-align: center;
+  border-radius: 999rpx;
+  padding: 0 14rpx;
 }
 
 .cartbar-text {
-  color: #B9BFC7;
-  font-size: 26rpx;
-  margin-left: 10rpx;
+  color: #EAE4DC;
+  font-size: 27rpx;
+  font-weight: 500;
+  margin-left: 16rpx;
 }
 
 .cartbar-btn {
-  background: #E86A17;
+  background: linear-gradient(135deg, #E2621A 0%, #F28536 100%);
   color: #FFFFFF;
   font-size: 28rpx;
+  font-weight: 600;
   border-radius: 999rpx;
-  padding: 20rpx 34rpx;
+  padding: 20rpx 36rpx;
+  box-shadow: 0 8rpx 20rpx rgba(223, 94, 22, 0.34);
+  transition: transform 0.14s ease;
+}
+
+.cartbar-btn:active {
+  transform: scale(0.95);
 }

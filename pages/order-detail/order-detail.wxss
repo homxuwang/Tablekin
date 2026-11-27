@@ -1,70 +1,76 @@
 .page {
-  padding-bottom: 60rpx;
+  padding-bottom: 72rpx;
 }
 
 .head {
   background: #FFFFFF;
-  padding: 44rpx 32rpx 40rpx;
-  border-radius: 0 0 32rpx 32rpx;
+  padding: 36rpx 34rpx 42rpx;
+  border-radius: 0 0 38rpx 38rpx;
+  box-shadow: 0 10rpx 28rpx rgba(42, 28, 16, 0.05);
 }
 
 .head-status {
-  font-size: 40rpx;
-  font-weight: 600;
+  font-size: 44rpx;
+  font-weight: 700;
+  letter-spacing: -0.4rpx;
 }
 
 .st-wait {
-  color: #B4610F;
+  color: #C2670E;
 }
 
 .st-ack {
-  color: #1D6FA5;
+  color: #2563EB;
 }
 
 .st-doing {
-  color: #1D9E75;
+  color: #158059;
 }
 
 .st-done {
-  color: #5C646E;
+  color: #685E56;
 }
 
 .st-off {
-  color: #A32D2D;
+  color: #C83737;
 }
 
 .head-hint {
   font-size: 26rpx;
-  color: #8A9099;
+  color: #8A7E74;
   margin-top: 12rpx;
   line-height: 1.6;
 }
 
 .head-sub {
   font-size: 26rpx;
-  color: #A32D2D;
-  margin-top: 8rpx;
+  font-weight: 500;
+  color: #C83737;
+  margin-top: 10rpx;
 }
 
 .panel {
   margin: 24rpx 24rpx 0;
-  padding: 8rpx 26rpx;
+  padding: 10rpx 28rpx 18rpx;
   background: #FFFFFF;
-  border-radius: 20rpx;
+  border-radius: 26rpx;
+  border: 1rpx solid rgba(60, 42, 24, 0.06);
+  box-shadow: 0 8rpx 28rpx rgba(42, 28, 16, 0.045);
 }
 
 .panel-title {
   font-size: 26rpx;
-  color: #8A9099;
-  padding: 22rpx 0 12rpx;
+  font-weight: 700;
+  color: #7D7168;
+  padding: 22rpx 0 16rpx;
 }
 
 .row {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 20rpx 0;
-  border-bottom: 2rpx solid #F5F6F8;
+  padding: 22rpx 0;
+  border-bottom: 1rpx solid #F4EFE8;
 }
 
 .row:last-child {
@@ -77,34 +83,39 @@
 
 .row-k {
   font-size: 26rpx;
-  color: #8A9099;
+  color: #8F847B;
   flex-shrink: 0;
 }
 
 .row-v {
   font-size: 28rpx;
-  color: #23282F;
+  font-weight: 600;
+  color: #1F1A17;
   text-align: right;
   padding-left: 24rpx;
 }
 
 .row-note {
   font-size: 27rpx;
-  color: #23282F;
+  color: #1F1A17;
+  background: #FAF7F2;
+  padding: 16rpx 20rpx;
+  border-radius: 14rpx;
   margin-top: 12rpx;
   line-height: 1.6;
 }
 
 .row-note-red {
-  color: #A32D2D;
+  color: #C83737;
+  background: #FEF0F0;
 }
 
 .item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18rpx 0;
-  border-bottom: 2rpx solid #F5F6F8;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F4EFE8;
 }
 
 .item:last-child {
@@ -112,38 +123,61 @@
 }
 
 .item-name {
-  font-size: 29rpx;
-  color: #23282F;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1F1A17;
 }
 
 .item-qty {
-  font-size: 26rpx;
-  color: #8A9099;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #DF5E16;
 }
 
-/* 进度时间轴 */
+/* 进度时间轴（带垂直连接线与高亮光环） */
 .step {
   display: flex;
   align-items: flex-start;
-  padding-bottom: 26rpx;
+  padding-bottom: 34rpx;
   position: relative;
 }
 
+.step::before {
+  content: '';
+  position: absolute;
+  left: 9rpx;
+  top: 28rpx;
+  bottom: -6rpx;
+  width: 3rpx;
+  background: #EBE4DB;
+}
+
+.step-on::before {
+  background: #F4C7A3;
+}
+
 .step:last-child {
-  padding-bottom: 8rpx;
+  padding-bottom: 10rpx;
+}
+
+.step:last-child::before {
+  display: none;
 }
 
 .dot {
-  width: 16rpx;
-  height: 16rpx;
+  width: 20rpx;
+  height: 20rpx;
   border-radius: 50%;
-  background: #E1E4E8;
-  margin: 8rpx 20rpx 0 0;
+  background: #E2DBD2;
+  margin: 8rpx 22rpx 0 0;
   flex-shrink: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .step-on .dot {
-  background: #E86A17;
+  background: #DF5E16;
+  box-shadow: 0 0 0 6rpx rgba(223, 94, 22, 0.16);
 }
 
 .step-main {
@@ -152,22 +186,23 @@
 }
 
 .step-label {
-  font-size: 27rpx;
-  color: #B4B9C0;
+  font-size: 28rpx;
+  color: #B4AAA0;
 }
 
 .step-on .step-label {
-  color: #23282F;
+  color: #1F1A17;
+  font-weight: 600;
 }
 
 .step-time {
   font-size: 22rpx;
-  color: #A6ACB4;
+  color: #9E938A;
   margin-top: 6rpx;
 }
 
 .actions {
-  padding: 32rpx 32rpx 0;
+  padding: 36rpx 32rpx 0;
 }
 
 .actions > view {

@@ -1,16 +1,19 @@
 .page {
-  padding-bottom: 40rpx;
+  padding-bottom: 64rpx;
 }
 
 .hero {
-  background: linear-gradient(135deg, #E86A17 0%, #F2913F 100%);
-  padding: 52rpx 32rpx 46rpx;
-  border-radius: 0 0 32rpx 32rpx;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 224, 184, 0.34) 0%, rgba(255, 224, 184, 0) 52%),
+    linear-gradient(145deg, #D95712 0%, #EA7326 60%, #F49242 100%);
+  padding: 36rpx 34rpx 52rpx;
+  border-radius: 0 0 40rpx 40rpx;
+  box-shadow: 0 14rpx 32rpx rgba(217, 87, 18, 0.18);
 }
 
 .hero-title {
-  font-size: 40rpx;
-  font-weight: 600;
+  font-size: 42rpx;
+  font-weight: 700;
   color: #FFFFFF;
   line-height: 1.4;
 }
@@ -23,48 +26,51 @@
 }
 
 .banner {
-  margin: 20rpx 24rpx 0;
+  margin: 22rpx 24rpx 0;
   padding: 22rpx 26rpx;
-  background: #FFF4EC;
-  color: #C05510;
-  border-radius: 16rpx;
+  background: #FFF3E8;
+  border: 1rpx solid #F8D3B4;
+  color: #B84C0E;
+  border-radius: 22rpx;
   font-size: 26rpx;
   line-height: 1.6;
 }
 
 .panel {
   background: #FFFFFF;
-  border-radius: 20rpx;
+  border-radius: 26rpx;
+  border: 1rpx solid rgba(60, 42, 24, 0.06);
+  box-shadow: 0 8rpx 28rpx rgba(42, 28, 16, 0.048);
   margin: 24rpx;
   overflow: hidden;
 }
 
 .code {
-  font-size: 34rpx;
-  color: #E86A17;
-  letter-spacing: 6rpx;
-  font-weight: 600;
+  font-size: 38rpx;
+  color: #DF5E16;
+  letter-spacing: 8rpx;
+  font-weight: 700;
 }
 
 .done {
-  padding: 48rpx 32rpx;
+  padding: 52rpx 32rpx;
   text-align: center;
 }
 
 .done-title {
-  font-size: 34rpx;
-  font-weight: 600;
-  color: #23282F;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1F1A17;
 }
 
 .done-sub {
   margin-top: 14rpx;
   font-size: 26rpx;
-  color: #8A9099;
+  color: #8A7E74;
 }
 
 .actions {
-  padding: 8rpx 32rpx 0;
+  padding: 12rpx 32rpx 0;
 }
 
 .actions .btn-primary,

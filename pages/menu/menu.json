@@ -1,6 +1,7 @@
 {
   "usingComponents": {},
   "navigationBarTitleText": "吃好喝好",
+  "navigationBarBackgroundColor": "#FFFFFF",
   "enablePullDownRefresh": true,
   "backgroundTextStyle": "dark"
 }

@@ -1,6 +1,7 @@
 {
   "usingComponents": {},
   "navigationBarTitleText": "食材仓库",
+  "navigationBarBackgroundColor": "#FFFFFF",
   "backgroundTextStyle": "dark",
   "enablePullDownRefresh": true
 }
