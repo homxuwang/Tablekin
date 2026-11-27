@@ -86,7 +86,10 @@
   <view class="section-title">所有食材</view>
   <view class="panel">
     <view wx:if="{{loading}}" class="hint">正在加载…</view>
-    <view wx:elif="{{list.length === 0}}" class="hint">还没有食材。先加一个「五花肉」，再把它挂到菜品上。</view>
+    <view wx:elif="{{list.length === 0}}" class="hint">
+      <image class="illus-sm" src="/assets/images/empty-kitchen.jpg" mode="aspectFit"></image>
+      <view>还没有食材。先加一个「五花肉」，再把它挂到菜品上。</view>
+    </view>
     <view class="item" wx:for="{{list}}" wx:key="id">
       <view class="item-head">
         <view class="item-name">{{item.name}}</view>

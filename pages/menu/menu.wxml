@@ -76,6 +76,7 @@
       <view wx:if="{{loading}}" class="empty">正在准备菜单…</view>
 
       <view wx:elif="{{shownDishes.length === 0}}" class="empty">
+        <image class="illus-sm" src="/assets/images/empty-kitchen.jpg" mode="aspectFit"></image>
         <view>{{pickedTags.length ? '没有同时符合这些标签的菜' : '这个分类下还没有菜'}}</view>
         <view wx:if="{{isMember && !pickedTags.length}}">到「管理」里新增分类和菜品吧</view>
         <view wx:else>换个分类，或者少选几个标签看看</view>
@@ -90,7 +91,10 @@
               src="{{item.imageUrl}}"
               mode="aspectFill"
             ></image>
-            <view wx:else class="cover cover-plain">{{item.initial}}</view>
+            <view wx:else class="cover cover-wrap">
+              <image class="cover-img" src="/assets/images/dish-placeholder.jpg" mode="aspectFill"></image>
+              <view class="cover-initial">{{item.initial}}</view>
+            </view>
             <view class="dish-main">
               <view class="dish-name">{{item.name}}</view>
               <view wx:if="{{item.description}}" class="dish-desc">{{item.description}}</view>

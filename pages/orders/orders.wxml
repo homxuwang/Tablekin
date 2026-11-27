@@ -84,6 +84,7 @@
 
   <block wx:elif="{{orders.length === 0}}">
     <view class="hint">
+      <image class="illus-empty" src="/assets/images/empty-orders.jpg" mode="aspectFit"></image>
       <block wx:if="{{segment === 'received'}}">
         <view>还没有人点菜</view>
         <view class="hint-sub">把菜单分享给家人朋友，他们就能点了</view>

@@ -77,12 +77,14 @@
   <view wx:if="{{loading}}" class="hint">正在搜索…</view>
 
   <view wx:elif="{{!searched}}" class="hint">
+    <image class="illus-sm" src="/assets/images/empty-kitchen.jpg" mode="aspectFit"></image>
     <block wx:if="{{mode === 'dish'}}">输入菜名，就能在{{scope === 'current' ? '这个厨房里' : '所有厨房里'}}找到它</block>
     <block wx:else>输入厨房名，看看别人家今天做什么</block>
   </view>
 
   <block wx:elif="{{mode === 'dish'}}">
     <view wx:if="{{dishes.length === 0}}" class="hint">
+      <image class="illus-sm" src="/assets/images/empty-kitchen.jpg" mode="aspectFit"></image>
       没有叫这个的菜<block wx:if="{{scope === 'current'}}">，切到「所有厨房」再找找？</block>
     </view>
     <view
@@ -94,7 +96,10 @@
       data-kitchen="{{item.kitchen_id}}"
     >
       <image wx:if="{{item.imageUrl}}" class="thumb" src="{{item.imageUrl}}" mode="aspectFill"></image>
-      <view wx:else class="thumb thumb-plain">{{item.initial}}</view>
+      <view wx:else class="thumb cover-wrap">
+        <image class="cover-img" src="/assets/images/dish-placeholder.jpg" mode="aspectFill"></image>
+        <view class="cover-initial">{{item.initial}}</view>
+      </view>
       <view class="dcard-main">
         <view class="dcard-name">{{item.name}}</view>
         <view wx:if="{{item.description}}" class="dcard-sub">{{item.description}}</view>

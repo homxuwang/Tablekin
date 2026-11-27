@@ -1,5 +1,6 @@
 <view class="page">
   <view class="hero">
+    <image class="hero-emblem" src="/assets/images/dish-placeholder.jpg" mode="aspectFill"></image>
     <view class="hero-text">
       <view class="hero-title">今天想吃点什么</view>
       <view class="hero-sub">
@@ -48,6 +49,7 @@
 
   <block wx:elif="{{kitchens.length === 0}}">
     <view class="hint">
+      <image class="illus-empty" src="/assets/images/empty-kitchen.jpg" mode="aspectFit"></image>
       <block wx:if="{{mineCount > 0}}">
         <view>还没有别人家的公开厨房</view>
         <view class="hint-sub">你的厨房在「下厨」里管着，随时能分享给家人</view>

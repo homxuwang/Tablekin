@@ -1,5 +1,6 @@
 <view class="page">
   <view class="hero">
+    <image class="hero-emblem" src="/assets/images/empty-kitchen.jpg" mode="aspectFill"></image>
     <view class="hero-text">
       <view class="hero-title">下厨</view>
       <view class="hero-sub">菜单、食材、家人都在这儿管</view>
@@ -24,6 +25,7 @@
 
   <block wx:elif="{{kitchens.length === 0}}">
     <view class="hint">
+      <image class="illus-empty" src="/assets/images/empty-kitchen.jpg" mode="aspectFit"></image>
       <view>你还没有自己的厨房</view>
       <view class="hint-sub">起个名字、写几道菜，就能让家人朋友来点单了</view>
     </view>

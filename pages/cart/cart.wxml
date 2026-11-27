@@ -1,7 +1,11 @@
 <view class="page">
   <view wx:if="{{items.length === 0}}" class="empty">
+    <image class="illus-empty" src="/assets/images/empty-orders.jpg" mode="aspectFit"></image>
     <view>还没有点菜</view>
     <view>回到菜单，点菜品右侧的「+」加入吧</view>
+    <view class="actions" style="margin-top: 32rpx;">
+      <view class="btn-primary" bindtap="goMenu">回菜单挑几道菜</view>
+    </view>
   </view>
 
   <block wx:else>

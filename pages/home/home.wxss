@@ -14,6 +14,16 @@
   box-shadow: 0 14rpx 32rpx rgba(217, 87, 18, 0.18);
 }
 
+.hero-emblem {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 28rpx;
+  margin-right: 22rpx;
+  flex-shrink: 0;
+  border: 3rpx solid rgba(255, 255, 255, 0.52);
+  box-shadow: 0 10rpx 22rpx rgba(110, 38, 6, 0.22);
+}
+
 .hero-text {
   flex: 1;
   min-width: 0;

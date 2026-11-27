@@ -3,13 +3,19 @@
   <view wx:elif="{{error}}" class="empty">{{error}}</view>
 
   <block wx:else>
-    <swiper wx:if="{{images.length > 0}}" class="hero" indicator-dots="{{images.length > 1}}" indicator-active-color="#E86A17">
+    <swiper wx:if="{{images.length > 0}}" class="hero" indicator-dots="{{images.length > 1}}" indicator-active-color="#DF5E16">
       <swiper-item wx:for="{{images}}" wx:key="path">
         <image wx:if="{{item.url}}" class="hero" src="{{item.url}}" mode="aspectFill" data-path="{{item.path}}" bindtap="previewImages"></image>
-        <view wx:else class="hero hero-plain image-unavailable" data-path="{{item.path}}" bindtap="previewImages">图片暂不可用</view>
+        <view wx:else class="hero hero-illus image-unavailable" data-path="{{item.path}}" bindtap="previewImages">
+          <image class="hero-illus-img" src="/assets/images/dish-hero.jpg" mode="aspectFill"></image>
+          <view class="hero-illus-badge">图片暂不可用</view>
+        </view>
       </swiper-item>
     </swiper>
-    <view wx:else class="hero hero-plain">{{form.name}}</view>
+    <view wx:else class="hero hero-illus">
+      <image class="hero-illus-img" src="/assets/images/dish-hero.jpg" mode="aspectFill"></image>
+      <view class="hero-illus-badge">私房手作 · 暂无实拍图</view>
+    </view>
 
     <view class="panel">
       <view class="dish-title">{{form.name}}</view>
