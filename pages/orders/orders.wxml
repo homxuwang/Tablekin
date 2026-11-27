@@ -1,15 +1,17 @@
 <view class="page">
   <view class="tabs">
-    <view
-      class="tab {{segment === 'mine' ? 'tab-on' : ''}}"
-      bindtap="switchSegment"
-      data-segment="mine"
-    >我点的</view>
-    <view
-      class="tab {{segment === 'received' ? 'tab-on' : ''}}"
-      bindtap="switchSegment"
-      data-segment="received"
-    >我收到的</view>
+    <view class="tabs-track">
+      <view
+        class="tab {{segment === 'mine' ? 'tab-on' : ''}}"
+        bindtap="switchSegment"
+        data-segment="mine"
+      >我点的</view>
+      <view
+        class="tab {{segment === 'received' ? 'tab-on' : ''}}"
+        bindtap="switchSegment"
+        data-segment="received"
+      >我收到的</view>
+    </view>
   </view>
 
   <view wx:if="{{segment === 'received' && kitchens.length > 1}}" class="filters">

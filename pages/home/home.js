@@ -134,10 +134,13 @@ Page({
             return sum + Number(row.quantity || 0)
           }, 0)
           const kitchen = kitchenById[order.kitchen_id]
+          const progressLevel =
+            order.status === 'accepted' ? 3 : order.acked_at ? 2 : 1
           return Object.assign({}, order, {
             kitchenName: kitchen ? kitchen.name : '某个厨房',
             statusText: status.text,
             statusClass: 'st-' + status.tone,
+            progressLevel: progressLevel,
             mealTimeText: api.mealScheduleText(order),
             timeText: clock(order.created_at),
             dishesText: rows

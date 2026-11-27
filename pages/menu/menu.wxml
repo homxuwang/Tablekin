@@ -84,7 +84,7 @@
 
       <block wx:else>
         <view class="dish {{item.soldOut || item.unavailable ? 'dish-off' : ''}}" wx:for="{{shownDishes}}" wx:key="id">
-          <view class="dish-hit" bindtap="openDish" data-id="{{item.id}}">
+          <view class="dish-cover-hit" bindtap="openDish" data-id="{{item.id}}">
             <image
               wx:if="{{item.imageUrl}}"
               class="cover"
@@ -95,29 +95,32 @@
               <image class="cover-img" src="/assets/images/dish-placeholder.jpg" mode="aspectFill"></image>
               <view class="cover-initial">{{item.initial}}</view>
             </view>
-            <view class="dish-main">
+          </view>
+          <view class="dish-right">
+            <view class="dish-info" bindtap="openDish" data-id="{{item.id}}">
               <view class="dish-name">{{item.name}}</view>
               <view wx:if="{{item.description}}" class="dish-desc">{{item.description}}</view>
               <view wx:if="{{item.tagList.length}}" class="dish-labels">
                 <text class="label" wx:for="{{item.tagList}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
               </view>
+            </view>
+            <view class="dish-bottom">
               <view class="dish-tags">
-                <text wx:if="{{item.recipe}}" class="tag">有菜谱</text>
                 <text wx:if="{{item.canMakeText}}" class="tag tag-stock">{{item.canMakeText}}</text>
+                <text wx:elif="{{item.recipe}}" class="tag">有菜谱</text>
                 <text wx:if="{{item.soldOut}}" class="tag tag-off">缺料</text>
                 <text wx:if="{{item.unavailable}}" class="tag tag-off">已下架</text>
               </view>
+              <view wx:if="{{item.unavailable}}" class="add-pill add-pill-off" catchtap="explainUnavailable" data-id="{{item.id}}">下架</view>
+              <view wx:elif="{{item.soldOut}}" class="add-pill add-pill-warn" catchtap="explainShortageById" data-id="{{item.id}}">缺料</view>
+              <view wx:elif="{{item.cartQty > 0}}" class="dish-stepper">
+                <view class="ds-btn ds-minus" catchtap="decreaseFromCart" data-id="{{item.id}}">−</view>
+                <view class="ds-num">{{item.cartQty}}</view>
+                <view class="ds-btn ds-plus" catchtap="addToCart" data-id="{{item.id}}">+</view>
+              </view>
+              <view wx:else class="add" catchtap="addToCart" data-id="{{item.id}}">+</view>
             </view>
           </view>
-
-          <view wx:if="{{item.unavailable}}" class="add-pill add-pill-off" catchtap="explainUnavailable" data-id="{{item.id}}">下架</view>
-          <view wx:elif="{{item.soldOut}}" class="add-pill add-pill-warn" catchtap="explainShortageById" data-id="{{item.id}}">缺料</view>
-          <view wx:elif="{{item.cartQty > 0}}" class="dish-stepper">
-            <view class="ds-btn ds-minus" catchtap="decreaseFromCart" data-id="{{item.id}}">−</view>
-            <view class="ds-num">{{item.cartQty}}</view>
-            <view class="ds-btn ds-plus" catchtap="addToCart" data-id="{{item.id}}">+</view>
-          </view>
-          <view wx:else class="add" catchtap="addToCart" data-id="{{item.id}}">+</view>
         </view>
         <view class="list-tail"></view>
       </block>

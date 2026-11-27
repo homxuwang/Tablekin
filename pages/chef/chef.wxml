@@ -1,25 +1,42 @@
 <view class="page">
-  <view class="hero">
-    <image class="hero-emblem" src="/assets/images/empty-kitchen.jpg" mode="aspectFill"></image>
-    <view class="hero-text">
-      <view class="hero-title">下厨</view>
-      <view class="hero-sub">菜单、食材、家人都在这儿管</view>
+  <view class="top-head">
+    <view class="top-main">
+      <view class="top-title">我的后厨</view>
+      <view class="top-sub">菜单、食材库存与好友协作都在这儿管</view>
     </view>
-    <view class="hero-add" bindtap="newKitchen">＋ 新建</view>
+    <view class="top-add" bindtap="newKitchen">＋ 新建</view>
   </view>
 
   <view wx:if="{{error}}" class="banner">{{error}}</view>
 
-  <view wx:if="{{todos.length > 0}}" class="todo" bindtap="goOrders">
-    <view class="todo-head">待你处理</view>
-    <view class="todo-row" wx:for="{{todos}}" wx:key="id">
-      <view class="todo-name">{{item.name}}</view>
-      <view class="todo-text">{{item.text}}</view>
+  <view wx:if="{{todos.length > 0}}" class="dock" bindtap="goOrders">
+    <view class="dock-top">
+      <view>
+        <view class="dock-kicker">后厨待办</view>
+        <view class="dock-metrics">
+          <text class="dock-num">{{pendingTotal}}</text>
+          <text class="dock-unit">单待接</text>
+          <block wx:if="{{alertTotal > 0}}">
+            <text class="dock-sep">·</text>
+            <text class="dock-num">{{alertTotal}}</text>
+            <text class="dock-unit">条缺料</text>
+          </block>
+        </view>
+      </view>
+      <view class="dock-cta">去接单 ›</view>
     </view>
-    <view class="todo-go">去订单页回话 ›</view>
+    <view class="dock-list">
+      <view class="dock-row" wx:for="{{todos}}" wx:key="id">
+        <view class="dock-name">{{item.name}}</view>
+        <view class="dock-text">{{item.text}}</view>
+      </view>
+    </view>
   </view>
 
-  <view class="section-title">我的厨房</view>
+  <view class="sec-head">
+    <view class="sec-title">管理的厨房</view>
+    <view wx:if="{{kitchens.length > 0}}" class="sec-count">{{kitchens.length}} 家</view>
+  </view>
 
   <view wx:if="{{loading}}" class="hint">正在加载…</view>
 
@@ -36,26 +53,37 @@
       <view class="kcard-avatar">{{item.initial}}</view>
       <view class="kcard-main">
         <view class="kcard-name">
-          {{item.name}}
+          <text class="kcard-title">{{item.name}}</text>
           <text class="tag">{{item.roleText}}</text>
         </view>
         <view class="kcard-sub">{{item.dishText}} · {{item.scopeText}}</view>
       </view>
+      <button class="share-pill" open-type="share" data-id="{{item.id}}">分享</button>
     </view>
-    <view class="kcard-tools">
-      <view class="chip chip-main" bindtap="openMenu" data-id="{{item.id}}">点菜</view>
-      <view class="chip" bindtap="openManage" data-id="{{item.id}}">管理</view>
-      <view class="chip" bindtap="openMembers" data-id="{{item.id}}">邀请家人</view>
-      <button class="chip chip-share" open-type="share" data-id="{{item.id}}">分享菜单</button>
+    <view class="bento">
+      <view class="bento-item bento-main" bindtap="openManage" data-id="{{item.id}}">
+        <view class="bento-title">菜品与库存</view>
+        <view class="bento-sub">编辑菜单、补货、排序</view>
+      </view>
+      <view class="bento-side">
+        <view class="bento-mini" bindtap="openMenu" data-id="{{item.id}}">
+          <text class="bento-mini-t">点菜视角</text>
+          <text class="bento-mini-a">›</text>
+        </view>
+        <view class="bento-mini" bindtap="openMembers" data-id="{{item.id}}">
+          <text class="bento-mini-t">邀请家人</text>
+          <text class="bento-mini-a">›</text>
+        </view>
+      </view>
     </view>
   </view>
 
-  <view class="actions">
-    <view class="btn-primary" bindtap="newKitchen">＋ 新建厨房</view>
-    <view class="btn-ghost" bindtap="joinKitchen">用邀请码加入别人的厨房</view>
+  <view class="actions-row">
+    <view class="act-btn act-primary" bindtap="newKitchen">＋ 新建厨房</view>
+    <view class="act-btn act-ghost" bindtap="joinKitchen">输码加入厨房</view>
   </view>
 
   <view class="foot-hint">
-    你也能当顾客：去「点菜」页看看别人家今天做什么
+    想吃别人做的？切到「点菜」逛逛朋友家今天做什么
   </view>
 </view>

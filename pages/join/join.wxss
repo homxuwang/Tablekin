@@ -3,26 +3,21 @@
 }
 
 .hero {
-  background:
-    radial-gradient(circle at 88% 12%, rgba(255, 224, 184, 0.34) 0%, rgba(255, 224, 184, 0) 52%),
-    linear-gradient(145deg, #D95712 0%, #EA7326 60%, #F49242 100%);
-  padding: 36rpx 34rpx 52rpx;
-  border-radius: 0 0 40rpx 40rpx;
-  box-shadow: 0 14rpx 32rpx rgba(217, 87, 18, 0.18);
+  padding: 28rpx 32rpx 16rpx;
 }
 
 .hero-title {
-  font-size: 42rpx;
-  font-weight: 700;
-  color: #FFFFFF;
-  line-height: 1.4;
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #1F1A17;
+  line-height: 1.35;
 }
 
 .hero-sub {
   font-size: 25rpx;
-  color: rgba(255, 255, 255, 0.88);
-  margin-top: 14rpx;
-  line-height: 1.7;
+  color: #8A7E74;
+  margin-top: 12rpx;
+  line-height: 1.65;
 }
 
 .banner {

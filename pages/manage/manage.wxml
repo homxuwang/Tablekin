@@ -25,48 +25,35 @@
 </template>
 
 <view class="page">
-  <view class="hero">
-    <view class="hero-title">{{kitchen.name || '厨房管理'}}</view>
-    <view class="hero-sub">
-      {{total}} 道菜 · {{publicCount}} 道已公开 · {{memberCount}} 位成员
+  <view class="top-head">
+    <view class="top-main">
+      <view class="top-title">{{kitchen.name || '厨房管理'}}</view>
+      <view class="top-sub">
+        {{total}} 道菜 · {{publicCount}} 道已公开 · {{memberCount}} 位成员
+      </view>
     </view>
+    <view class="top-preview" bindtap="goMenu">预览菜单</view>
   </view>
 
   <view wx:if="{{error}}" class="banner">{{error}}</view>
 
-  <view class="section-title">待处理事项</view>
-  <view class="panel">
-    <view class="cell" bindtap="goOrders">
-      <view class="cell-main">
-        <view class="cell-title">待处理点餐</view>
-        <view class="cell-sub">
-          {{pendingCount > 0 ? pendingCount + ' 单等着接（含预约）' : '点单都处理完了'}}
-        </view>
-      </view>
-      <view class="cell-go">查看</view>
+  <view class="kpi-grid">
+    <view class="kpi-card {{pendingCount > 0 ? 'kpi-hot' : ''}}" bindtap="goOrders">
+      <view class="kpi-num">{{pendingCount}}</view>
+      <view class="kpi-label">待接单</view>
     </view>
-    <view class="cell" bindtap="goOrders">
-      <view class="cell-main">
-        <view class="cell-title">缺料提醒</view>
-        <view class="cell-sub">
-          {{alertCount > 0 ? alertCount + ' 条：有人点菜时食材不够' : '暂时没有'}}
-        </view>
-      </view>
-      <view class="cell-go">查看</view>
+    <view class="kpi-card {{alertCount > 0 ? 'kpi-warn' : ''}}" bindtap="goOrders">
+      <view class="kpi-num">{{alertCount}}</view>
+      <view class="kpi-label">缺料提醒</view>
     </view>
-    <view class="cell" bindtap="goIngredients">
-      <view class="cell-main">
-        <view class="cell-title">食材仓库</view>
-        <view class="cell-sub">
-          {{ingredientCount}} 种食材<block wx:if="{{lowIngredientCount > 0}}"> · {{lowIngredientCount}} 种该补货</block>
-        </view>
-      </view>
-      <view class="cell-go">管理</view>
+    <view class="kpi-card" bindtap="goIngredients">
+      <view class="kpi-num">{{ingredientCount}}</view>
+      <view class="kpi-label">食材仓库</view>
     </view>
   </view>
 
-  <view wx:if="{{lowIngredientCount > 0}}" class="alert">
-    该补货了：{{lowIngredientNames}}
+  <view wx:if="{{lowIngredientCount > 0}}" class="alert" bindtap="goIngredients">
+    该补货了（{{lowIngredientCount}} 种）：{{lowIngredientNames}} ›
   </view>
 
   <view class="section-title">协作</view>

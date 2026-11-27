@@ -202,7 +202,7 @@
 }
 
 .actions {
-  padding: 36rpx 32rpx 0;
+  padding: 32rpx 24rpx 180rpx;
 }
 
 .actions > view {
@@ -211,4 +211,43 @@
 
 .actions > view:last-child {
   margin-bottom: 0;
+}
+
+.actions-pair {
+  display: flex;
+}
+
+.pair-btn {
+  flex: 1;
+  padding: 24rpx 0;
+  text-align: center;
+  font-size: 27rpx;
+  font-weight: 600;
+  color: #685E56;
+  background: #FFFFFF;
+  border: 1.5rpx solid #E7DFD6;
+  border-radius: 999rpx;
+}
+
+.pair-btn + .pair-btn {
+  margin-left: 16rpx;
+}
+
+.detail-dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 253, 249, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1rpx solid rgba(60, 42, 24, 0.08);
+  box-shadow: 0 -8rpx 26rpx rgba(42, 28, 16, 0.06);
+  padding: 18rpx 28rpx;
+  padding-bottom: calc(18rpx + env(safe-area-inset-bottom));
+  z-index: 20;
+}
+
+.dock-btn {
+  width: 100%;
 }

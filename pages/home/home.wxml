@@ -1,49 +1,71 @@
 <view class="page">
-  <view class="hero">
-    <image class="hero-emblem" src="/assets/images/dish-placeholder.jpg" mode="aspectFill"></image>
-    <view class="hero-text">
-      <view class="hero-title">今天想吃点什么</view>
-      <view class="hero-sub">
-        {{mineCount > 0 ? '你也是大厨，自己的厨房在「下厨」里' : '挑一家厨房，点几道菜让 TA 做'}}
+  <view class="top-head">
+    <view class="top-main">
+      <view class="top-title">今天想吃点什么</view>
+      <view class="top-sub">
+        {{mineCount > 0 ? '挑一家朋友厨房点单，或去「下厨」管自己的菜单' : '挑一家喜欢的厨房，点几道菜让 TA 做'}}
       </view>
     </view>
-    <view class="hero-search" bindtap="goSearch">
-      <icon type="search" size="17" color="#FFFFFF"></icon>
-    </view>
+    <view class="top-join" bindtap="goJoin">输码加入</view>
   </view>
 
-  <view class="quick-bar">
-    <view class="quick-search" bindtap="goSearch">
-      <icon type="search" size="15" color="#9E938A"></icon>
-      <text class="quick-search-txt">搜菜名、标签或朋友的厨房…</text>
+  <view class="search-wrap">
+    <view class="search-pill" bindtap="goSearch">
+      <icon type="search" size="16" color="#9E938A"></icon>
+      <text class="search-placeholder">搜菜名、标签或朋友的厨房…</text>
+      <view class="search-tag">搜一搜</view>
     </view>
-    <view class="quick-join" bindtap="goJoin">输码加入</view>
   </view>
 
   <view wx:if="{{error}}" class="banner">{{error}}</view>
 
-  <view wx:if="{{lastKitchen}}" class="resume" bindtap="openMenu" data-id="{{lastKitchen.id}}">
-    <view class="resume-avatar">{{lastKitchen.initial}}</view>
-    <view class="resume-main">
-      <view class="resume-label">上次点菜的地方</view>
-      <view class="resume-name">{{lastKitchen.name}}</view>
+  <view wx:if="{{lastKitchen}}" class="resume-hero" bindtap="openMenu" data-id="{{lastKitchen.id}}">
+    <view class="resume-body">
+      <view class="resume-kicker">上次常去</view>
+      <view class="resume-title">{{lastKitchen.name}}</view>
+      <view class="resume-cta">继续点菜 ›</view>
     </view>
-    <view class="resume-go">继续点菜 ›</view>
+    <image class="resume-art" src="/assets/images/dish-placeholder.jpg" mode="aspectFill"></image>
   </view>
 
   <block wx:if="{{ongoing.length > 0}}">
-    <view class="section-title">进行中的点单</view>
-    <view class="ocard" wx:for="{{ongoing}}" wx:key="id" bindtap="openOrder" data-id="{{item.id}}">
-      <view class="ocard-top">
-        <view class="ocard-kitchen">{{item.kitchenName}}</view>
-        <view class="status {{item.statusClass}}">{{item.statusText}}</view>
-      </view>
-      <view class="ocard-line">{{item.dishesText || '菜品明细'}} · 共 {{item.total}} 份</view>
-      <view class="ocard-line ocard-dim">想吃：{{item.mealTimeText}} · {{item.timeText}} 下单</view>
+    <view class="sec-head">
+      <view class="sec-title">进行中的点单</view>
+      <view class="sec-count">{{ongoing.length}} 单</view>
     </view>
+    <scroll-view class="ongoing-scroll" scroll-x>
+      <view class="ongoing-row">
+        <view
+          class="ocard {{ongoing.length === 1 ? 'ocard-full' : ''}}"
+          wx:for="{{ongoing}}"
+          wx:key="id"
+          bindtap="openOrder"
+          data-id="{{item.id}}"
+        >
+          <view class="ocard-top">
+            <view class="ocard-kitchen">{{item.kitchenName}}</view>
+            <view class="status {{item.statusClass}}">{{item.statusText}}</view>
+          </view>
+          <view class="ocard-line">{{item.dishesText || '菜品明细'}} · 共 {{item.total}} 份</view>
+          <view class="ocard-bars">
+            <view class="obar {{item.progressLevel >= 1 ? 'obar-on' : ''}}"></view>
+            <view class="obar {{item.progressLevel >= 2 ? 'obar-on' : ''}}"></view>
+            <view class="obar {{item.progressLevel >= 3 ? 'obar-on' : ''}}"></view>
+            <view class="obar"></view>
+          </view>
+          <view class="ocard-foot">
+            <text>想吃：{{item.mealTimeText}}</text>
+            <text>{{item.timeText}} 下单 ›</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
   </block>
 
-  <view class="section-title">今天开饭的厨房</view>
+  <view class="sec-head">
+    <view class="sec-title">今天开饭的厨房</view>
+    <view wx:if="{{kitchens.length > 0}}" class="sec-count">{{kitchens.length}} 家</view>
+  </view>
 
   <view wx:if="{{loading}}" class="hint">正在看看谁家开饭…</view>
 
@@ -65,25 +87,28 @@
   </block>
 
   <block wx:else>
-    <view
-      class="kcard {{item.dishCount === 0 ? 'kcard-dim' : ''}}"
-      wx:for="{{kitchens}}"
-      wx:key="id"
-      bindtap="openMenu"
-      data-id="{{item.id}}"
-    >
-      <view class="kcard-avatar">{{item.initial}}</view>
-      <view class="kcard-main">
+    <view class="kgrid">
+      <view
+        class="kcard {{item.dishCount === 0 ? 'kcard-dim' : ''}}"
+        wx:for="{{kitchens}}"
+        wx:key="id"
+        bindtap="openMenu"
+        data-id="{{item.id}}"
+      >
+        <view class="kcard-top">
+          <view class="kcard-avatar">{{item.initial}}</view>
+          <view class="kcard-pill {{item.dishCount === 0 ? 'kcard-pill-dim' : ''}}">{{item.dishText}}</view>
+        </view>
         <view class="kcard-name">{{item.name}}</view>
-        <view class="kcard-sub">{{item.description || '这个厨房还没有写简介'}}</view>
-        <view class="kcard-tags">
-          <text class="tag">{{item.dishText}}</text>
+        <view class="kcard-sub">{{item.description || '大厨还没写简介，进去看看菜单吧'}}</view>
+        <view class="kcard-foot">
+          <text class="kcard-go">{{item.dishCount > 0 ? '进厨房点菜' : '进去看看'}}</text>
+          <text class="kcard-arrow">›</text>
         </view>
       </view>
-      <view class="kcard-go">{{item.dishCount > 0 ? '去点菜' : '看看'}}</view>
     </view>
     <view class="list-foot">
-      想起谁家的菜？点右上角放大镜，按菜名或厨房名搜
+      想起谁家的菜？点上方搜索框，按菜名或标签直达
     </view>
   </block>
 </view>

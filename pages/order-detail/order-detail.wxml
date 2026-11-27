@@ -58,18 +58,30 @@
     <view class="actions">
       <block wx:if="{{isChef && order.status === 'pending'}}">
         <view wx:if="{{!order.acked_at}}" class="btn-ghost" bindtap="ack">先回一句「收到」</view>
-        <view class="btn-primary" bindtap="accept">{{busy ? '处理中…' : '接单，开始做'}}</view>
         <view class="btn-danger" bindtap="reject">这单做不了</view>
-      </block>
-      <block wx:if="{{isChef && order.status === 'accepted'}}">
-        <view class="btn-primary" bindtap="finish">{{busy ? '处理中…' : '已出餐'}}</view>
       </block>
       <block wx:if="{{isMine && order.status === 'pending'}}">
         <view class="btn-danger" bindtap="cancel">撤销这一单</view>
       </block>
-      <view wx:if="{{items.length > 0 && kitchenId}}" class="btn-primary" bindtap="reorder">再来一单</view>
-      <view class="btn-ghost" bindtap="copySummary">复制清单</view>
-      <view class="btn-ghost" bindtap="goMenu">再去这家点几道</view>
+      <view class="actions-pair">
+        <view class="pair-btn" bindtap="copySummary">复制清单</view>
+        <view class="pair-btn" bindtap="goMenu">逛逛这家菜单</view>
+      </view>
+    </view>
+
+    <view class="detail-dock">
+      <view wx:if="{{isChef && order.status === 'pending'}}" class="btn-primary dock-btn" bindtap="accept">
+        {{busy ? '处理中…' : '接单，开始做'}}
+      </view>
+      <view wx:elif="{{isChef && order.status === 'accepted'}}" class="btn-primary dock-btn" bindtap="finish">
+        {{busy ? '处理中…' : '已出餐，喊人开饭'}}
+      </view>
+      <view wx:elif="{{items.length > 0 && kitchenId}}" class="btn-primary dock-btn" bindtap="reorder">
+        再来一单
+      </view>
+      <view wx:else class="btn-ghost dock-btn" bindtap="goMenu">
+        再去这家点几道
+      </view>
     </view>
   </block>
 </view>

@@ -166,7 +166,7 @@
 
 .dish {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   background: #FFFFFF;
   border-radius: 24rpx;
   border: 1rpx solid rgba(60, 42, 24, 0.055);
@@ -175,20 +175,18 @@
   margin-bottom: 18rpx;
 }
 
-.dish-off .dish-hit {
+.dish-off .dish-cover-hit,
+.dish-off .dish-info {
   opacity: 0.52;
 }
 
-.dish-hit {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  min-width: 0;
+.dish-cover-hit {
+  flex-shrink: 0;
 }
 
 .cover {
-  width: 132rpx;
-  height: 132rpx;
+  width: 148rpx;
+  height: 148rpx;
   border-radius: 20rpx;
   flex-shrink: 0;
   background: #F4EFE8;
@@ -205,10 +203,24 @@
   font-weight: 700;
 }
 
-.dish-main {
+.dish-right {
   flex: 1;
   min-width: 0;
-  padding: 0 18rpx;
+  padding-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dish-info {
+  flex: 1;
+}
+
+.dish-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14rpx;
 }
 
 .dish-name {
@@ -221,7 +233,7 @@
 .dish-desc {
   font-size: 23rpx;
   color: #8A7E74;
-  margin-top: 8rpx;
+  margin-top: 6rpx;
   line-height: 1.45;
   display: -webkit-box;
   -webkit-box-orient: vertical;

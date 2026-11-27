@@ -1,8 +1,8 @@
 {
   "usingComponents": {},
   "navigationBarTitleText": "吃好喝好",
-  "navigationBarBackgroundColor": "#D95712",
-  "navigationBarTextStyle": "white",
+  "navigationBarBackgroundColor": "#F7F4EF",
+  "navigationBarTextStyle": "black",
   "enablePullDownRefresh": true,
   "backgroundTextStyle": "dark"
 }
