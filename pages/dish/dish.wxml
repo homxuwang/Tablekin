@@ -31,9 +31,26 @@
       <view wx:else class="recipe-locked">还没有录入菜谱</view>
     </view>
 
-    <view class="actions">
-      <view wx:if="{{canEdit}}" class="btn-primary" bindtap="toggleEdit">编辑这道菜</view>
-      <view wx:else class="btn-ghost" bindtap="goKitchenMenu">去这个厨房点菜</view>
+    <view class="actions actions-view">
+      <view wx:if="{{canEdit}}" class="btn-ghost" bindtap="toggleEdit">编辑这道菜</view>
+      <view class="btn-ghost" bindtap="goKitchenMenu">去这个厨房看全部菜</view>
+    </view>
+
+    <view wx:if="{{dishId}}" class="dish-bar">
+      <view class="dish-bar-left" wx:if="{{cartTotal > 0}}" bindtap="goCartFromDish">
+        <view class="dish-bar-badge">{{cartTotal}}</view>
+        <view class="dish-bar-txt">去结算 ›</view>
+      </view>
+      <view class="dish-bar-left dish-bar-muted" wx:else bindtap="goKitchenMenu">
+        <view class="dish-bar-txt">回菜单</view>
+      </view>
+      <view wx:if="{{!form.is_available}}" class="dish-bar-btn dish-bar-off">已下架</view>
+      <view wx:elif="{{cartQty > 0}}" class="dish-bar-stepper">
+        <view class="db-step db-minus" bindtap="decreaseDishFromCart">−</view>
+        <view class="db-num">{{cartQty}} 份</view>
+        <view class="db-step db-plus" bindtap="addDishToCart">+</view>
+      </view>
+      <view wx:else class="dish-bar-btn" bindtap="addDishToCart">+ 加入点菜清单</view>
     </view>
   </block>
 </view>

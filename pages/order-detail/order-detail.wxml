@@ -67,6 +67,7 @@
       <block wx:if="{{isMine && order.status === 'pending'}}">
         <view class="btn-danger" bindtap="cancel">撤销这一单</view>
       </block>
+      <view wx:if="{{items.length > 0 && kitchenId}}" class="btn-primary" bindtap="reorder">再来一单</view>
       <view class="btn-ghost" bindtap="copySummary">复制清单</view>
       <view class="btn-ghost" bindtap="goMenu">再去这家点几道</view>
     </view>

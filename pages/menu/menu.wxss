@@ -406,3 +406,154 @@
 .cartbar-btn:active {
   transform: scale(0.95);
 }
+
+.header-btn-fun {
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #E2621A 0%, #F18335 100%);
+  border-color: transparent;
+  box-shadow: 0 6rpx 16rpx rgba(223, 94, 22, 0.24);
+}
+
+.cat-badge {
+  position: absolute;
+  top: 14rpx;
+  right: 10rpx;
+  min-width: 30rpx;
+  height: 30rpx;
+  line-height: 30rpx;
+  padding: 0 8rpx;
+  border-radius: 999rpx;
+  background: #DF5E16;
+  color: #FFFFFF;
+  font-size: 19rpx;
+  font-weight: 700;
+  text-align: center;
+}
+
+.dish-stepper {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.ds-btn {
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 50%;
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 48rpx;
+  text-align: center;
+  transition: transform 0.12s ease;
+}
+
+.ds-btn:active {
+  transform: scale(0.88);
+}
+
+.ds-minus {
+  background: #FFF2E6;
+  color: #DF5E16;
+  border: 1.5rpx solid #F4CCB0;
+}
+
+.ds-plus {
+  background: linear-gradient(135deg, #E2621A 0%, #F28536 100%);
+  color: #FFFFFF;
+  box-shadow: 0 6rpx 14rpx rgba(223, 94, 22, 0.24);
+}
+
+.ds-num {
+  min-width: 48rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1F1A17;
+}
+
+.add-pill {
+  padding: 10rpx 20rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.add-pill-off {
+  background: #EFEAE2;
+  color: #9E938A;
+}
+
+.add-pill-warn {
+  background: #FEF3E2;
+  color: #C2670E;
+  border: 1rpx solid #F6CFAF;
+}
+
+.sheet-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(31, 26, 23, 0.42);
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.sheet {
+  background: #FFFFFF;
+  border-radius: 34rpx 34rpx 0 0;
+  padding: 28rpx 30rpx calc(156rpx + env(safe-area-inset-bottom));
+  max-height: 62vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -12rpx 36rpx rgba(25, 16, 10, 0.16);
+}
+
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #F2ECE4;
+}
+
+.sheet-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1F1A17;
+}
+
+.sheet-clear {
+  font-size: 25rpx;
+  font-weight: 500;
+  color: #9E938A;
+  padding: 6rpx 12rpx;
+}
+
+.sheet-list {
+  max-height: 44vh;
+}
+
+.sheet-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #F6F1EA;
+}
+
+.sheet-row:last-child {
+  border-bottom: none;
+}
+
+.sheet-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1F1A17;
+  flex: 1;
+  padding-right: 20rpx;
+}

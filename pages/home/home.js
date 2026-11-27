@@ -187,6 +187,10 @@ Page({
     wx.navigateTo({ url: '/pages/search/search' })
   },
 
+  goJoin() {
+    wx.navigateTo({ url: '/pages/join/join' })
+  },
+
   openMenu(event) {
     wx.navigateTo({ url: '/pages/menu/menu?kitchenId=' + Number(event.currentTarget.dataset.id) })
   },

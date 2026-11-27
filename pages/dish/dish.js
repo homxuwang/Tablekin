@@ -1,7 +1,9 @@
 const api = require('../../utils/api')
+const cart = require('../../utils/cart')
 const { confirmDelete } = require('../../utils/confirm-delete')
 const dishImages = require('../../utils/dish-images')
 const dishTags = require('../../utils/dish-tags')
+const haptics = require('../../utils/haptics')
 
 function toForm(dish) {
   return {
@@ -43,6 +45,8 @@ Page({
     tagInput: '',
     tagSuggestions: [],
     maxTags: dishTags.MAX_TAGS,
+    cartQty: 0,
+    cartTotal: 0,
   },
 
   onLoad(options) {
@@ -269,6 +273,7 @@ Page({
         tagSuggestions: that.suggestionsFor(dishTags.tags(dish)),
       })
       that.setImages(dishImages.paths(dish), urls)
+      that.syncDishCart()
       wx.setNavigationBarTitle({ title: dish.name || '菜品详情' })
     })
   },
@@ -517,6 +522,51 @@ Page({
     } finally {
       this.setData({ deleting: false })
     }
+  },
+
+  syncDishCart() {
+    if (!this.kitchenId || !this.dishId) return
+    const current = cart.readCart(this.kitchenId)
+    const entry = current[this.dishId]
+    this.setData({
+      cartQty: entry && entry.count > 0 ? entry.count : 0,
+      cartTotal: cart.totalCount(current),
+    })
+  },
+
+  addDishToCart() {
+    if (!this.kitchenId || !this.dishId) return
+    if (!this.data.form.is_available) {
+      wx.showToast({ title: '这道菜已下架，暂时点不了', icon: 'none' })
+      return
+    }
+    const current = cart.readCart(this.kitchenId)
+    const entry = current[this.dishId] || { id: this.dishId, name: this.data.form.name, count: 0 }
+    entry.name = this.data.form.name || entry.name
+    entry.kitchen_id = this.kitchenId
+    entry.count = entry.count + 1
+    current[this.dishId] = entry
+    cart.writeCart(this.kitchenId, current)
+    haptics.light()
+    this.syncDishCart()
+    wx.showToast({ title: '已加入清单', icon: 'success', duration: 900 })
+  },
+
+  decreaseDishFromCart() {
+    if (!this.kitchenId || !this.dishId) return
+    const current = cart.readCart(this.kitchenId)
+    const entry = current[this.dishId]
+    if (!entry) return
+    if (entry.count <= 1) delete current[this.dishId]
+    else entry.count = entry.count - 1
+    cart.writeCart(this.kitchenId, current)
+    haptics.light()
+    this.syncDishCart()
+  },
+
+  goCartFromDish() {
+    if (!this.kitchenId) return
+    wx.navigateTo({ url: '/pages/cart/cart?kitchenId=' + this.kitchenId })
   },
 
   goKitchenMenu() {

@@ -1,5 +1,7 @@
 const api = require('../../utils/api')
+const cart = require('../../utils/cart')
 const refresh = require('../../utils/live-refresh')
+const haptics = require('../../utils/haptics')
 
 function pad(n) {
   return n < 10 ? '0' + n : String(n)
@@ -302,6 +304,34 @@ Page({
       },
       fail() { that.setData({ busy: false }) },
     })
+  },
+
+  reorder() {
+    const kitchenId = this.data.kitchenId
+    const items = this.data.items || []
+    if (!kitchenId || !items.length) return
+    const valid = items.filter(function (row) {
+      return Number(row.dish_id) > 0 && Number(row.quantity) > 0
+    })
+    if (!valid.length) {
+      wx.showToast({ title: '这单菜品已不在菜单里', icon: 'none' })
+      return
+    }
+    const next = cart.readCart(kitchenId)
+    valid.forEach(function (row) {
+      const id = Number(row.dish_id)
+      const prev = next[id]
+      next[id] = {
+        id: id,
+        kitchen_id: kitchenId,
+        name: row.dish_name || (prev && prev.name) || '菜品',
+        count: (prev ? Number(prev.count || 0) : 0) + Number(row.quantity || 1),
+      }
+    })
+    cart.writeCart(kitchenId, next)
+    haptics.light()
+    wx.showToast({ title: '已装回点菜清单', icon: 'success', duration: 900 })
+    wx.navigateTo({ url: '/pages/cart/cart?kitchenId=' + kitchenId })
   },
 
   goMenu() {

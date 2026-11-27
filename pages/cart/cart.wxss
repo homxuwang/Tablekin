@@ -298,3 +298,35 @@
   opacity: 0.45;
   box-shadow: none;
 }
+
+.date-quick-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 16rpx 30rpx 0;
+}
+
+.date-picker-chip {
+  color: #DF5E16;
+  background: #FFF4EB;
+  border: 1rpx solid #F4CCB0;
+  font-weight: 600;
+}
+
+.note-chips {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 14rpx;
+}
+
+.warn-btn {
+  margin-top: 22rpx;
+  padding: 18rpx 0;
+  text-align: center;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #DF5E16;
+  background: #FFFFFF;
+  border: 1.5rpx solid #F4C59C;
+  border-radius: 999rpx;
+}

@@ -346,3 +346,27 @@
 .actions {
   padding: 16rpx 32rpx 0;
 }
+
+.status-filters {
+  display: flex;
+  align-items: center;
+  padding: 18rpx 24rpx 4rpx;
+}
+
+.sfilter {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: #7D7168;
+  background: #FFFFFF;
+  border: 1.5rpx solid #E7DFD6;
+  border-radius: 999rpx;
+  padding: 10rpx 24rpx;
+  margin-right: 14rpx;
+}
+
+.sfilter-on {
+  color: #DF5E16;
+  font-weight: 600;
+  background: #FFF2E6;
+  border-color: #F4CCB0;
+}

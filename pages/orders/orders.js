@@ -1,5 +1,6 @@
 const api = require('../../utils/api')
 const refresh = require('../../utils/live-refresh')
+const haptics = require('../../utils/haptics')
 
 function pad(n) {
   return n < 10 ? '0' + n : String(n)
@@ -27,6 +28,8 @@ Page({
     error: '',
     segment: 'mine',
     filterKitchenId: 0,
+    statusFilter: 'all',
+    activeCount: 0,
     kitchens: [],
     orders: [],
     alerts: [],
@@ -102,8 +105,9 @@ Page({
   switchSegment(event) {
     const segment = event.currentTarget.dataset.segment === 'received' ? 'received' : 'mine'
     if (segment === this.data.segment) return
+    haptics.light()
     const that = this
-    this.setData({ segment: segment, filterKitchenId: 0, orders: [], alerts: [] }, function () {
+    this.setData({ segment: segment, filterKitchenId: 0, statusFilter: 'all', activeCount: 0, orders: [], alerts: [] }, function () {
       that.load()
     })
   },
@@ -111,7 +115,15 @@ Page({
   pickKitchen(event) {
     const id = Number(event.currentTarget.dataset.id) || 0
     if (id === this.data.filterKitchenId) return
+    haptics.light()
     this.setData({ filterKitchenId: id }, this.applyFilter)
+  },
+
+  pickStatusFilter(event) {
+    const value = String(event.currentTarget.dataset.status || 'all')
+    if (value === this.data.statusFilter) return
+    haptics.light()
+    this.setData({ statusFilter: value }, this.applyFilter)
   },
 
   load(options) {
@@ -232,11 +244,20 @@ Page({
 
   applyFilter() {
     const filter = this.data.filterKitchenId
-    const list = (this.allOrders || []).filter(function (order) {
+    const statusFilter = this.data.statusFilter || 'all'
+    const byKitchen = (this.allOrders || []).filter(function (order) {
       if (!filter) return true
       return order.kitchen_id === filter
     })
-    this.setData({ orders: list })
+    const activeCount = byKitchen.filter(function (order) {
+      return order.status === 'pending' || order.status === 'accepted'
+    }).length
+    const list = byKitchen.filter(function (order) {
+      if (statusFilter === 'active') return order.status === 'pending' || order.status === 'accepted'
+      if (statusFilter === 'done') return order.status !== 'pending' && order.status !== 'accepted'
+      return true
+    })
+    this.setData({ orders: list, activeCount: activeCount })
   },
 
   findOrder(id) {

@@ -11,6 +11,14 @@
     </view>
   </view>
 
+  <view class="quick-bar">
+    <view class="quick-search" bindtap="goSearch">
+      <icon type="search" size="15" color="#9E938A"></icon>
+      <text class="quick-search-txt">搜菜名、标签或朋友的厨房…</text>
+    </view>
+    <view class="quick-join" bindtap="goJoin">输码加入</view>
+  </view>
+
   <view wx:if="{{error}}" class="banner">{{error}}</view>
 
   <view wx:if="{{lastKitchen}}" class="resume" bindtap="openMenu" data-id="{{lastKitchen.id}}">

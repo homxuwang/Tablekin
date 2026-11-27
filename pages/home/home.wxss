@@ -321,3 +321,45 @@
 .actions {
   padding: 20rpx 32rpx 0;
 }
+
+.quick-bar {
+  display: flex;
+  align-items: center;
+  margin: 22rpx 24rpx 0;
+}
+
+.quick-search {
+  flex: 1;
+  min-width: 0;
+  height: 82rpx;
+  padding: 0 26rpx;
+  background: #FFFFFF;
+  border-radius: 999rpx;
+  border: 1rpx solid rgba(60, 42, 24, 0.07);
+  box-shadow: 0 6rpx 20rpx rgba(42, 28, 16, 0.04);
+  display: flex;
+  align-items: center;
+}
+
+.quick-search-txt {
+  font-size: 26rpx;
+  color: #9E938A;
+  margin-left: 14rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quick-join {
+  flex-shrink: 0;
+  margin-left: 14rpx;
+  height: 82rpx;
+  line-height: 80rpx;
+  padding: 0 28rpx;
+  background: #FFF1E5;
+  color: #DF5E16;
+  border: 1.5rpx solid #F4CCB0;
+  border-radius: 999rpx;
+  font-size: 25rpx;
+  font-weight: 600;
+}

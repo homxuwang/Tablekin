@@ -10,7 +10,7 @@
       <view class="row" wx:for="{{items}}" wx:key="id">
         <view class="row-name">{{item.name}}</view>
         <view class="stepper">
-          <view class="step" bindtap="decrease" data-id="{{item.id}}">-</view>
+          <view class="step" bindtap="decrease" data-id="{{item.id}}">−</view>
           <view class="step-num">{{item.count}}</view>
           <view class="step" bindtap="increase" data-id="{{item.id}}">+</view>
         </view>
@@ -26,13 +26,26 @@
           <block wx:if="{{item.dishes}}"> · 用在「{{item.dishes}}」</block>
         </view>
       </view>
+      <view class="warn-btn" bindtap="reportCartShortage">
+        {{reportingShortage ? '提醒中…' : '一键提醒大厨补货'}}
+      </view>
     </view>
 
     <view class="panel">
       <view class="panel-title">什么时候吃</view>
-      <picker mode="date" value="{{orderDate}}" start="{{today}}" end="{{maxDate}}" bindchange="onMealDate">
-        <view class="date-row"><text>就餐日期</text><text class="date-value">{{orderDate}}　›</text></view>
-      </picker>
+      <view class="date-quick-row">
+        <view
+          class="quick-chip {{orderDate === item.value ? 'quick-on' : ''}}"
+          wx:for="{{quickDates}}"
+          wx:key="value"
+          data-date="{{item.value}}"
+          bindtap="pickQuickDate"
+        >{{item.label}}</view>
+        <picker mode="date" value="{{orderDate}}" start="{{today}}" end="{{maxDate}}" bindchange="onMealDate">
+          <view class="quick-chip date-picker-chip">{{orderDate}} ›</view>
+        </picker>
+      </view>
+
       <view class="chips">
         <view wx:if="{{orderDate === today}}" class="chip {{mealType === 'asap' ? 'chip-on' : ''}}" bindtap="pickAsap">尽快</view>
         <view class="chip {{mealType === 'point' ? 'chip-on' : ''}}" bindtap="pickPoint">定个时间点</view>
@@ -78,7 +91,16 @@
         />
       </view>
       <view class="field">
-        <view class="field-label">备注（可不填）</view>
+        <view class="field-label">备注（点选标签或直接输入）</view>
+        <view class="note-chips">
+          <view
+            class="quick-chip"
+            wx:for="{{quickNotes}}"
+            wx:key="*this"
+            data-note="{{item}}"
+            bindtap="appendQuickNote"
+          >+ {{item}}</view>
+        </view>
         <textarea
           class="field-textarea short"
           value="{{note}}"

@@ -3,6 +3,7 @@ const dishImages = require('../../utils/dish-images')
 const dishTags = require('../../utils/dish-tags')
 const cart = require('../../utils/cart')
 const recent = require('../../utils/recent')
+const haptics = require('../../utils/haptics')
 
 Page({
   data: {
@@ -17,6 +18,8 @@ Page({
     dishes: [],
     shownDishes: [],
     cartCount: 0,
+    cartItems: [],
+    showCartSheet: false,
     blockedCount: 0,
     allTags: [],
     pickedTags: [],
@@ -36,7 +39,7 @@ Page({
 
   onShow() {
     if (!this.kitchenId) return
-    this.setData({ cartCount: cart.totalCount(cart.readCart(this.kitchenId)) })
+    this.syncCartState()
     if (this.loadedOnce) this.load()
   },
 
@@ -52,6 +55,48 @@ Page({
       title: kitchen ? '看看「' + kitchen.name + '」今天有什么菜' : '看看我家今天的菜单',
       path: '/pages/menu/menu?kitchenId=' + this.kitchenId,
     }
+  },
+
+  // 把本地购物车的每道菜数量同步到菜品卡片、分类角标与底部抽屉
+  syncCartState(sourceCart) {
+    const current = sourceCart || cart.readCart(this.kitchenId)
+    const total = cart.totalCount(current)
+    const items = cart.toList(current)
+    const qtyByDish = {}
+    items.forEach(function (entry) {
+      qtyByDish[entry.id] = entry.count
+    })
+    const dishes = (this.data.dishes || []).map(function (dish) {
+      return Object.assign({}, dish, { cartQty: qtyByDish[dish.id] || 0 })
+    })
+    const cartByCat = {}
+    const countByCat = {}
+    dishes.forEach(function (dish) {
+      const cid = dish.category_id || 0
+      countByCat[cid] = (countByCat[cid] || 0) + 1
+      if (dish.cartQty > 0) {
+        cartByCat[cid] = (cartByCat[cid] || 0) + dish.cartQty
+      }
+    })
+    const categories = (this.data.categories || []).map(function (cat) {
+      return Object.assign({}, cat, {
+        dishCount: countByCat[cat.id] || 0,
+        cartQty: cartByCat[cat.id] || 0,
+      })
+    })
+    const patch = {
+      cartCount: total,
+      cartItems: items,
+      dishes: dishes,
+      categories: categories,
+    }
+    if (total === 0 && this.data.showCartSheet) {
+      patch.showCartSheet = false
+    }
+    const that = this
+    this.setData(patch, function () {
+      that.applyFilter()
+    })
   },
 
   load() {
@@ -111,19 +156,24 @@ Page({
           })
       })
       .then(function (payload) {
+        const currentCart = cart.readCart(id)
         let blocked = 0
         const prepared = payload.dishes.map(function (dish) {
           const info = payload.availability[dish.id] || { hasRecipe: false, canMake: null, lacks: [] }
           const soldOut = info.canMake !== null && info.canMake <= 0
+          const unavailable = dish.is_available === false
           if (soldOut) blocked += 1
+          const cartEntry = currentCart[dish.id]
           return Object.assign({}, dish, {
             initial: String(dish.name || '菜').slice(0, 1),
             imageUrl: payload.urls[dishImages.paths(dish)[0]] || '',
             soldOut: soldOut,
+            unavailable: unavailable,
             canMake: info.canMake,
             canMakeText: info.canMake && info.canMake > 0 ? '还能做 ' + info.canMake + ' 份' : '',
             lacks: info.lacks || [],
             tagList: dishTags.tags(dish),
+            cartQty: cartEntry && cartEntry.count > 0 ? cartEntry.count : 0,
           })
         })
         that.loadedOnce = true
@@ -138,7 +188,7 @@ Page({
             allTags: that.decorateTags(payload.tags || [], that.data.pickedTags),
           },
           function () {
-            that.applyFilter()
+            that.syncCartState(currentCart)
           }
         )
         wx.setNavigationBarTitle({ title: payload.kitchen.name || '今日菜单' })
@@ -162,6 +212,7 @@ Page({
   },
 
   pickTag(event) {
+    haptics.light()
     const name = event.currentTarget.dataset.name
     const picked = dishTags.clean(this.data.pickedTags)
     const at = picked.indexOf(name)
@@ -172,6 +223,7 @@ Page({
   },
 
   clearTags() {
+    haptics.light()
     this.setData({ pickedTags: [], allTags: this.decorateTags(this.data.allTags, []) })
     this.applyFilter()
   },
@@ -192,6 +244,7 @@ Page({
   },
 
   pickCategory(event) {
+    haptics.light()
     const id = Number(event.currentTarget.dataset.id) || 0
     const that = this
     this.setData({ activeCategoryId: id }, function () {
@@ -205,27 +258,114 @@ Page({
     })[0]
   },
 
-  addToCart(event) {
-    const id = Number(event.currentTarget.dataset.id)
+  addDishById(id) {
     const dish = this.findDish(id)
-    if (!dish) return
+    if (!dish) return false
+    if (dish.unavailable || dish.is_available === false) {
+      wx.showToast({ title: '「' + dish.name + '」已下架，暂时点不了', icon: 'none' })
+      return false
+    }
     if (dish.soldOut) {
       this.explainShortage(dish)
-      return
+      return false
     }
     const current = cart.readCart(this.kitchenId)
     const entry = current[id] || { id: id, name: dish.name, count: 0 }
     const limit = dish.canMake
     if (limit !== null && limit !== undefined && entry.count + 1 > limit) {
       wx.showToast({ title: '食材只够做 ' + limit + ' 份', icon: 'none' })
-      return
+      return false
     }
     entry.name = dish.name
     entry.kitchen_id = dish.kitchen_id
     entry.count = entry.count + 1
     current[id] = entry
     cart.writeCart(this.kitchenId, current)
-    this.setData({ cartCount: cart.totalCount(current) })
+    haptics.light()
+    this.syncCartState(current)
+    return true
+  },
+
+  addToCart(event) {
+    this.addDishById(Number(event.currentTarget.dataset.id))
+  },
+
+  decreaseFromCart(event) {
+    const id = Number(event.currentTarget.dataset.id)
+    const current = cart.readCart(this.kitchenId)
+    const entry = current[id]
+    if (!entry) return
+    if (entry.count <= 1) delete current[id]
+    else entry.count = entry.count - 1
+    cart.writeCart(this.kitchenId, current)
+    haptics.light()
+    this.syncCartState(current)
+  },
+
+  explainUnavailable(event) {
+    const dish = this.findDish(Number(event.currentTarget.dataset.id))
+    wx.showToast({
+      title: dish ? '「' + dish.name + '」今天暂不上架' : '这道菜已下架',
+      icon: 'none',
+    })
+  },
+
+  // 「今天吃啥」随机推荐：从可点菜品中随机挑一道，解决选择困难
+  pickRandomDish() {
+    const pool = (this.data.shownDishes.length ? this.data.shownDishes : this.data.dishes).filter(
+      function (dish) {
+        return !dish.soldOut && !dish.unavailable && dish.is_available !== false
+      }
+    )
+    if (!pool.length) {
+      wx.showToast({ title: '当前没有可点的菜品', icon: 'none' })
+      return
+    }
+    haptics.light()
+    const chosen = pool[Math.floor(Math.random() * pool.length)]
+    const that = this
+    wx.showModal({
+      title: '今天试试「' + chosen.name + '」？',
+      content: chosen.description || '大厨拿手菜，点击即可加入点菜清单。',
+      confirmText: '就点这道',
+      cancelText: pool.length > 1 ? '换一道' : '再想想',
+      success(res) {
+        if (res.confirm) {
+          if (that.addDishById(chosen.id)) {
+            wx.showToast({ title: '已加入「' + chosen.name + '」', icon: 'success' })
+          }
+        } else if (res.cancel && pool.length > 1) {
+          that.pickRandomDish()
+        }
+      },
+    })
+  },
+
+  // 底部点菜抽屉：不离开菜单页就能查看、增减或清空已选菜品
+  toggleCartSheet() {
+    if (!this.data.cartCount) return
+    haptics.light()
+    this.setData({ showCartSheet: !this.data.showCartSheet })
+  },
+
+  closeCartSheet() {
+    this.setData({ showCartSheet: false })
+  },
+
+  noop() {},
+
+  clearCartFromMenu() {
+    const that = this
+    wx.showModal({
+      title: '清空已选菜品？',
+      content: '清空后可以重新挑选。',
+      confirmColor: '#C93A3A',
+      success(res) {
+        if (!res.confirm) return
+        cart.clear(that.kitchenId)
+        that.syncCartState({})
+      },
+    })
   },
 
   // 食材不够时：说清楚缺什么，并留一条提醒给这个厨房的管理者。
@@ -280,6 +420,7 @@ Page({
   },
 
   goCart() {
+    this.setData({ showCartSheet: false })
     wx.navigateTo({ url: '/pages/cart/cart?kitchenId=' + this.kitchenId })
   },
 

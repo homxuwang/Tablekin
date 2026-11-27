@@ -17,7 +17,7 @@
       class="filter {{filterKitchenId === 0 ? 'filter-on' : ''}}"
       bindtap="pickKitchen"
       data-id="0"
-    >全部</view>
+    >全部厨房</view>
     <view
       class="filter {{filterKitchenId === item.id ? 'filter-on' : ''}}"
       wx:for="{{kitchens}}"
@@ -25,6 +25,24 @@
       bindtap="pickKitchen"
       data-id="{{item.id}}"
     >{{item.name}}</view>
+  </view>
+
+  <view class="status-filters">
+    <view
+      class="sfilter {{statusFilter === 'all' ? 'sfilter-on' : ''}}"
+      bindtap="pickStatusFilter"
+      data-status="all"
+    >全部</view>
+    <view
+      class="sfilter {{statusFilter === 'active' ? 'sfilter-on' : ''}}"
+      bindtap="pickStatusFilter"
+      data-status="active"
+    >进行中{{activeCount > 0 ? ' (' + activeCount + ')' : ''}}</view>
+    <view
+      class="sfilter {{statusFilter === 'done' ? 'sfilter-on' : ''}}"
+      bindtap="pickStatusFilter"
+      data-status="done"
+    >已结束</view>
   </view>
 
   <view wx:if="{{error}}" class="banner">{{error}}</view>

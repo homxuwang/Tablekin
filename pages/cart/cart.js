@@ -1,7 +1,24 @@
 const api = require('../../utils/api')
 const cart = require('../../utils/cart')
 const meal = require('../../utils/meal-time')
+const haptics = require('../../utils/haptics')
 const defaultEndTime = meal.defaultEndTime
+
+function shiftDate(baseDate, days) {
+  const base = new Date(baseDate + 'T00:00:00Z')
+  if (isNaN(base.getTime())) return baseDate
+  const next = new Date(base.getTime() + days * 86400000)
+  const pad = function (n) { return n < 10 ? '0' + n : String(n) }
+  return next.getUTCFullYear() + '-' + pad(next.getUTCMonth() + 1) + '-' + pad(next.getUTCDate())
+}
+
+function buildQuickDates(today) {
+  return [
+    { label: '今天', value: today },
+    { label: '明天', value: shiftDate(today, 1) },
+    { label: '后天', value: shiftDate(today, 2) },
+  ]
+}
 
 // 结算页：确认点菜清单、说清什么时候吃、写清备注，然后发给大厨。
 Page({
@@ -16,13 +33,16 @@ Page({
     submitting: false,
     checking: false,
     shortage: null,
+    reportingShortage: false,
     orderDate: '',
     today: '',
     maxDate: '',
+    quickDates: [],
     mealType: 'point',
     timeStart: '18:30',
     timeEnd: '19:30',
     quickTimes: ['12:00', '17:30', '18:00', '18:30'],
+    quickNotes: ['少放辣', '微辣', '不要香菜', '不吃葱', '少油少盐', '米饭两碗'],
     timeHint: '',
     mealText: '',
   },
@@ -30,11 +50,13 @@ Page({
   onLoad(options) {
     this.kitchenId = Number((options && options.kitchenId) || 0)
     const schedule = meal.defaultSchedule()
+    const today = api.todayString()
     this.setData({
       kitchenId: this.kitchenId,
       orderDate: schedule.orderDate,
-      today: api.todayString(),
+      today: today,
       maxDate: meal.maxOrderDate(),
+      quickDates: buildQuickDates(today),
       timeStart: schedule.timeStart,
       timeEnd: schedule.timeEnd,
     })
@@ -42,7 +64,8 @@ Page({
   },
 
   onShow() {
-    this.setData({ today: api.todayString(), maxDate: meal.maxOrderDate() })
+    const today = api.todayString()
+    this.setData({ today: today, maxDate: meal.maxOrderDate(), quickDates: buildQuickDates(today) })
     this.stockPromise = null
     this.setData({ dinerName: cart.readDinerName() })
     this.refresh()
@@ -140,11 +163,22 @@ Page({
     this.setData(patch, this.updateTimeHint)
   },
 
+  pickQuickDate(event) {
+    const date = String(event.currentTarget.dataset.date || '')
+    if (!date) return
+    haptics.light()
+    const patch = { orderDate: date }
+    if (date !== api.todayString() && this.data.mealType === 'asap') patch.mealType = 'point'
+    this.setData(patch, this.updateTimeHint)
+  },
+
   pickPoint() {
+    haptics.light()
     this.setData({ mealType: 'point' }, this.updateTimeHint)
   },
 
   pickRange() {
+    haptics.light()
     if (!this.data.timeEnd) {
       this.setData({ timeEnd: defaultEndTime(this.data.timeStart) })
     }
@@ -154,7 +188,46 @@ Page({
   pickQuick(event) {
     const time = String(event.currentTarget.dataset.time || '')
     if (!time) return
+    haptics.light()
     this.setData({ timeStart: time, timeEnd: defaultEndTime(time) }, this.updateTimeHint)
+  },
+
+  appendQuickNote(event) {
+    const text = String(event.currentTarget.dataset.note || '').trim()
+    if (!text) return
+    haptics.light()
+    const current = String(this.data.note || '').trim()
+    const parts = current ? current.split(/[，,、\n]+/).map(function (s) { return s.trim() }).filter(Boolean) : []
+    const at = parts.indexOf(text)
+    if (at >= 0) parts.splice(at, 1)
+    else parts.push(text)
+    const next = parts.join('、').slice(0, 200)
+    const that = this
+    this.setData({ note: next }, function () {
+      that.buildSummary()
+    })
+  },
+
+  reportCartShortage() {
+    const that = this
+    const problems = (this.data.shortage && this.data.shortage.problems) || []
+    if (!problems.length || this.data.reportingShortage) return
+    haptics.light()
+    this.setData({ reportingShortage: true })
+    api
+      .reportShortage({
+        kitchenId: this.kitchenId,
+        dinerName: String(this.data.dinerName || '').trim() || cart.readDinerName(),
+        problems: problems,
+      })
+      .then(function () {
+        that.setData({ reportingShortage: false })
+        wx.showToast({ title: '已提醒大厨补货', icon: 'success' })
+      })
+      .catch(function (err) {
+        that.setData({ reportingShortage: false })
+        wx.showToast({ title: api.friendly(err), icon: 'none' })
+      })
   },
 
   onTimeStart(event) {
