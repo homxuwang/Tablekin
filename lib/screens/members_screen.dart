@@ -230,7 +230,7 @@ class _MembersScreenState extends State<MembersScreen> {
                                     SharePlus.instance.share(
                                       ShareParams(
                                         text:
-                                            '来「吃好喝好」加入我的厨房【${_kitchen?.name ?? ''}】一起做饭点菜吧！邀请码：${_invite!.inviteCode}',
+                                            '来「一桌人」加入我的厨房【${_kitchen?.name ?? ''}】一起做饭点菜吧！邀请码：${_invite!.inviteCode}',
                                       ),
                                     );
                                   },

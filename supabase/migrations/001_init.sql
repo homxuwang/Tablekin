@@ -1,4 +1,4 @@
--- Tablekin (吃好喝好) — Supabase PostgreSQL Schema, RLS, Atomic RPCs & Realtime
+-- Tablekin (一桌人) — Supabase PostgreSQL Schema, RLS, Atomic RPCs & Realtime
 -- Run this migration once in your Supabase SQL Editor (or via `supabase db push`).
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;

@@ -257,7 +257,7 @@ class _ChefScreenState extends State<ChefScreen> {
                                   onTap: () {
                                     SharePlus.instance.share(
                                       ShareParams(
-                                        text: '来「吃好喝好」看看我的厨房【${k.name}】，点几道想吃的菜吧！',
+                                        text: '来「一桌人」看看我的厨房【${k.name}】，点几道想吃的菜吧！',
                                       ),
                                     );
                                   },

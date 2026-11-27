@@ -7,7 +7,9 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>吃好喝好</string>
+	<string>Tablekin</string>
+	<key>LSHasLocalizedDisplayName</key>
+	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>用于选择菜品照片并上传到厨房菜单</string>
 	<key>NSCameraUsageDescription</key>

@@ -42,7 +42,7 @@ class _TablekinAppState extends State<TablekinApp> {
     return AppStateScope(
       state: _state,
       child: MaterialApp(
-        title: '吃好喝好',
+        title: '一桌人',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         home: const RootShell(),

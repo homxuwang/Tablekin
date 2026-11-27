@@ -1,4 +1,4 @@
-# Tablekin（吃好喝好）— iOS 版（Flutter）
+# 一桌人（Tablekin）— iOS 版（Flutter）
 
 面向 iOS 打造的家人朋友互点菜、实时接单与家庭厨房协作应用。
 

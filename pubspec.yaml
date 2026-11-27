@@ -1,5 +1,5 @@
 name: tablekin
-description: "吃好喝好 Tablekin - 家人朋友互点菜、接单与厨房协作 iOS 应用"
+description: "一桌人 Tablekin - 家人朋友互点菜、接单与厨房协作 iOS 应用"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
