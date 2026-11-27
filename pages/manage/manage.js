@@ -1,18 +1,38 @@
 const api = require('../../utils/api')
+const dishImages = require('../../utils/dish-images')
+const haptics = require('../../utils/haptics')
 const sorting = require('../../utils/inline-sort')
 const { confirmDelete } = require('../../utils/confirm-delete')
+
+function filterDishesByCat(dishes, catFilter) {
+  const list = dishes || []
+  if (!catFilter || catFilter === 'all') return list
+  if (catFilter === 'uncat') {
+    return list.filter(function (dish) {
+      return !dish.category_id
+    })
+  }
+  const targetId = Number(catFilter)
+  return list.filter(function (dish) {
+    return Number(dish.category_id || 0) === targetId
+  })
+}
 
 Page({
   data: {
     ...sorting.initialData,
     canManage: false,
     categoryBusy: false,
+    dishBusyId: 0,
     kitchenId: 0,
     loading: true,
     error: '',
     kitchen: null,
     categories: [],
     dishes: [],
+    filteredDishes: [],
+    catFilter: 'all',
+    hasUncatDishes: false,
     newCategoryName: '',
     addingCategory: false,
     total: 0,
@@ -81,47 +101,115 @@ Page({
         const kitchen = payload.result[0]
         if (!kitchen) throw new Error('这个厨房不存在，或者你还不是它的成员')
         const categories = payload.result[1] || []
-        const dishes = payload.result[2] || []
+        const rawDishes = payload.result[2] || []
         const ingredients = payload.result[3] || []
         const alerts = payload.result[4] || []
         const orders = payload.result[5] || []
         const members = payload.result[6] || []
         const canManage = kitchen.owner_id === payload.user.id || members.some(row => row.user_id === payload.user.id)
         if (!canManage) throw new Error('只有厨房拥有者和共有人可以管理菜单')
-        if (that._unloaded) return
-        const low = ingredients.filter(function (item) {
-          const stock = Number(item.stock || 0)
-          const threshold = Number(item.alert_threshold || 0)
-          return stock <= 0 || (threshold > 0 && stock <= threshold)
+        const coverPaths = rawDishes.map(function (dish) {
+          return dishImages.paths(dish)[0]
         })
-        that.setData({
-          kitchen: kitchen,
-          canManage,
-          categories: categories,
-          dishes: dishes,
-          loading: false,
-          isOwner: kitchen.owner_id === payload.user.id,
-          total: dishes.length,
-          publicCount: dishes.filter(function (dish) {
-            return dish.is_public
-          }).length,
-          ingredientCount: ingredients.length,
-          lowIngredientCount: low.length,
-          lowIngredientNames: low
-            .map(function (item) {
-              return item.name
+        const signTask = typeof api.signImageUrls === 'function'
+          ? api.signImageUrls(coverPaths).catch(function () { return {} })
+          : Promise.resolve({})
+        return signTask.then(function (urls) {
+          if (that._unloaded) return
+          const dishes = rawDishes.map(function (dish) {
+            const firstPath = dishImages.paths(dish)[0]
+            return Object.assign({}, dish, {
+              initial: String(dish.name || '菜').slice(0, 1),
+              imageUrl: (urls && firstPath && urls[firstPath]) || '',
             })
-            .join('、'),
-          alertCount: alerts.length,
-          pendingCount: orders.filter(function (order) {
-            return order.status === 'pending'
-          }).length,
-          memberCount: members.length,
+          })
+          const low = ingredients.filter(function (item) {
+            const stock = Number(item.stock || 0)
+            const threshold = Number(item.alert_threshold || 0)
+            return stock <= 0 || (threshold > 0 && stock <= threshold)
+          })
+          const hasUncatDishes = dishes.some(function (dish) {
+            return !dish.category_id
+          })
+          const catIds = categories.map(function (c) { return String(c.id) })
+          let nextCatFilter = that.data.catFilter || 'all'
+          if (nextCatFilter === 'uncat' && !hasUncatDishes) nextCatFilter = 'all'
+          else if (nextCatFilter !== 'all' && nextCatFilter !== 'uncat' && catIds.indexOf(String(nextCatFilter)) < 0) nextCatFilter = 'all'
+          that.setData({
+            kitchen: kitchen,
+            canManage,
+            categories: categories,
+            dishes: dishes,
+            catFilter: nextCatFilter,
+            hasUncatDishes: hasUncatDishes,
+            filteredDishes: filterDishesByCat(dishes, nextCatFilter),
+            loading: false,
+            isOwner: kitchen.owner_id === payload.user.id,
+            total: dishes.length,
+            publicCount: dishes.filter(function (dish) {
+              return dish.is_public
+            }).length,
+            ingredientCount: ingredients.length,
+            lowIngredientCount: low.length,
+            lowIngredientNames: low
+              .map(function (item) {
+                return item.name
+              })
+              .join('、'),
+            alertCount: alerts.length,
+            pendingCount: orders.filter(function (order) {
+              return order.status === 'pending'
+            }).length,
+            memberCount: members.length,
+          })
+          wx.setNavigationBarTitle({ title: kitchen.name || '厨房管理' })
         })
-        wx.setNavigationBarTitle({ title: kitchen.name || '厨房管理' })
       })
       .catch(function (err) {
         that.setData({ loading: false, error: api.friendly(err) })
+      })
+  },
+
+  pickCatFilter(event) {
+    const id = String(event.currentTarget.dataset.id || 'all')
+    if (id === this.data.catFilter) return
+    haptics.light()
+    this.setData({
+      catFilter: id,
+      filteredDishes: filterDishesByCat(this.data.dishes, id),
+    })
+  },
+
+  toggleDishAvailable(event) {
+    if (this.data.sortKind || this.data.categoryBusy || this.data.dishBusyId || !this.data.canManage) return
+    const that = this
+    const id = Number(event.currentTarget.dataset.id)
+    const target = this.data.dishes.filter(function (item) {
+      return item.id === id
+    })[0]
+    if (!target) return
+    const next = !target.is_available
+    haptics.light()
+    this.setData({ dishBusyId: id })
+    return api
+      .updateDish(id, { is_available: next })
+      .then(function () {
+        if (that._unloaded) return
+        const dishes = that.data.dishes.map(function (dish) {
+          return dish.id === id ? Object.assign({}, dish, { is_available: next }) : dish
+        })
+        that.setData({
+          dishes: dishes,
+          filteredDishes: filterDishesByCat(dishes, that.data.catFilter),
+          dishBusyId: 0,
+        })
+        haptics.success()
+        wx.showToast({ title: next ? '已恢复在售' : '已设为下架', icon: 'none' })
+      })
+      .catch(function (err) {
+        if (that._unloaded) return
+        that.setData({ dishBusyId: 0 })
+        wx.showModal({ title: '修改失败', content: api.friendly(err), showCancel: false })
       })
   },
 

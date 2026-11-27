@@ -111,28 +111,52 @@
     </block>
   </view>
 
-  <view class="section-title section-sort"><text>菜品</text><view class="sort-entry" data-kind="dishes" bindtap="openSort">{{sortKind === 'dishes' ? '正在调整' : '调整顺序 ↕'}}</view></view>
+  <view class="section-title section-sort"><text>菜品（{{dishes.length}}）</text><view class="sort-entry" data-kind="dishes" bindtap="openSort">{{sortKind === 'dishes' ? '正在调整' : '调整顺序 ↕'}}</view></view>
+  <scroll-view wx:if="{{sortKind !== 'dishes' && dishes.length > 0 && (categories.length > 0 || hasUncatDishes)}}" class="cat-filter-scroll" scroll-x show-scrollbar="{{false}}">
+    <view class="cat-filter-row">
+      <view class="cat-pill {{catFilter === 'all' ? 'cat-pill-on' : ''}}" data-id="all" bindtap="pickCatFilter">全部 {{dishes.length}}</view>
+      <view
+        class="cat-pill {{catFilter === '' + item.id ? 'cat-pill-on' : ''}}"
+        wx:for="{{categories}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="pickCatFilter"
+      >{{item.name}}</view>
+      <view wx:if="{{hasUncatDishes}}" class="cat-pill {{catFilter === 'uncat' ? 'cat-pill-on' : ''}}" data-id="uncat" bindtap="pickCatFilter">未分类</view>
+    </view>
+  </scroll-view>
   <view class="panel">
     <template wx:if="{{sortKind === 'dishes'}}" is="inlineSorter" data="{{sortItems: sortItems, sortError: sortError, sortScrollTop: sortScrollTop, sortDragging: sortDragging, sortDragId: sortDragId, sortSaving: sortSaving, sortDirty: sortDirty}}"></template>
     <block wx:else>
     <view wx:if="{{loading}}" class="hint">正在加载…</view>
     <view wx:elif="{{dishes.length === 0}}" class="hint">还没有菜品，点下面的「新增菜品」开始录入</view>
+    <view wx:elif="{{filteredDishes.length === 0}}" class="hint">这个分类里还没有菜品</view>
     <view
-      class="dish-row"
-      wx:for="{{dishes}}"
+      class="dish-row {{!item.is_available ? 'dish-row-off' : ''}}"
+      wx:for="{{filteredDishes}}"
       wx:key="id"
       bindtap="openDish"
       data-id="{{item.id}}"
     >
+      <image wx:if="{{item.imageUrl}}" class="dish-thumb" src="{{item.imageUrl}}" mode="aspectFill"></image>
+      <view wx:else class="dish-thumb cover-wrap">
+        <image class="cover-img" src="/assets/images/dish-placeholder.jpg" mode="aspectFill"></image>
+        <view class="cover-initial">{{item.initial}}</view>
+      </view>
       <view class="dish-row-main">
         <view class="dish-row-name">{{item.name}}</view>
         <view class="dish-row-tags">
-          <text class="mini-tag">{{item.is_public ? '菜单公开' : '仅成员可见'}}</text>
+          <text class="mini-tag">{{item.is_public ? '公开' : '仅成员'}}</text>
           <text class="mini-tag">{{item.recipe ? '有菜谱' : '无菜谱'}}</text>
-          <text wx:if="{{!item.is_available}}" class="mini-tag mini-tag-off">已下架</text>
         </view>
       </view>
-      <view class="dish-row-go">编辑</view>
+      <view class="dish-row-ops">
+        <view
+          class="avail-pill {{item.is_available ? 'avail-on' : 'avail-off'}} {{dishBusyId === item.id ? 'avail-busy' : ''}}"
+          catchtap="toggleDishAvailable"
+          data-id="{{item.id}}"
+        >{{dishBusyId === item.id ? '…' : item.is_available ? '在售' : '已下架'}}</view>
+      </view>
     </view>
     </block>
   </view>
@@ -141,9 +165,7 @@
     <text class="inline-sort-handle">☰</text><view class="inline-sort-name">{{sortDragName}}</view>
   </view>
 
-  <view class="actions">
-    <view class="btn-primary" bindtap="newDish">+ 新增菜品</view>
-    <view class="btn-ghost" bindtap="goMenu">看客人视角的菜单</view>
-    <view class="btn-ghost" bindtap="goHome">回到「下厨」</view>
+  <view class="dock">
+    <view class="btn-primary dock-btn" bindtap="newDish">+ 新增菜品</view>
   </view>
 </view>

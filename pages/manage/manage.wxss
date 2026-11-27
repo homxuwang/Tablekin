@@ -1,5 +1,5 @@
 .page {
-  padding-bottom: 64rpx;
+  padding-bottom: calc(176rpx + env(safe-area-inset-bottom));
 }
 
 .top-head {
@@ -274,15 +274,56 @@
   line-height: 1.6;
 }
 
+.cat-filter-scroll {
+  width: 100%;
+  white-space: nowrap;
+  margin-bottom: 16rpx;
+}
+
+.cat-filter-row {
+  display: inline-flex;
+  padding: 0 24rpx;
+}
+
+.cat-pill {
+  flex-shrink: 0;
+  padding: 10rpx 24rpx;
+  margin-right: 12rpx;
+  border-radius: 999rpx;
+  background: #EFEAE2;
+  color: #7A6E65;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+.cat-pill-on {
+  background: #1F1A17;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
 .dish-row {
   display: flex;
   align-items: center;
-  padding: 26rpx 30rpx;
+  padding: 22rpx 26rpx;
   border-bottom: 1rpx solid #F2ECE4;
+}
+
+.dish-row-off {
+  opacity: 0.72;
 }
 
 .dish-row:last-child {
   border-bottom: none;
+}
+
+.dish-thumb {
+  width: 84rpx;
+  height: 84rpx;
+  border-radius: 18rpx;
+  flex-shrink: 0;
+  margin-right: 20rpx;
+  background: #F4EFE8;
 }
 
 .dish-row-main {
@@ -291,51 +332,77 @@
 }
 
 .dish-row-name {
-  font-size: 31rpx;
+  font-size: 30rpx;
   font-weight: 600;
   color: #1F1A17;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .dish-row-tags {
-  margin-top: 10rpx;
+  margin-top: 8rpx;
   display: flex;
   flex-wrap: wrap;
 }
 
 .mini-tag {
-  font-size: 21rpx;
+  font-size: 20rpx;
   font-weight: 500;
   color: #7D7168;
   background: #F4EFE8;
   border-radius: 8rpx;
   padding: 4rpx 12rpx;
-  margin-right: 10rpx;
-  margin-bottom: 6rpx;
+  margin-right: 8rpx;
 }
 
-.mini-tag-off {
-  color: #C83737;
-  background: #FEF0F0;
-}
-
-.dish-row-go {
-  font-size: 24rpx;
-  font-weight: 600;
-  color: #DF5E16;
-  background: #FFF1E5;
-  padding: 8rpx 22rpx;
-  border-radius: 999rpx;
+.dish-row-ops {
   flex-shrink: 0;
-  margin-left: 16rpx;
+  margin-left: 14rpx;
 }
 
-.actions {
-  padding: 28rpx 32rpx 0;
+.avail-pill {
+  font-size: 23rpx;
+  font-weight: 600;
+  padding: 10rpx 22rpx;
+  border-radius: 999rpx;
+  transition: transform 0.14s ease;
 }
 
-.actions .btn-primary,
-.actions .btn-ghost {
-  margin-bottom: 20rpx;
+.avail-pill:active {
+  transform: scale(0.94);
+}
+
+.avail-on {
+  color: #158059;
+  background: #E8F6F0;
+  border: 1.5rpx solid #BCE5D4;
+}
+
+.avail-off {
+  color: #C93A3A;
+  background: #FEF0F0;
+  border: 1.5rpx solid #F5C7C7;
+}
+
+.avail-busy {
+  opacity: 0.55;
+}
+
+.dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18rpx 28rpx calc(20rpx + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20px);
+  border-top: 1rpx solid rgba(60, 42, 24, 0.08);
+  z-index: 20;
+}
+
+.dock-btn {
+  width: 100%;
 }
 
 /* 固定可见高度，名称占据独立一行，避免按钮挤掉名称。 */

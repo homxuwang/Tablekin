@@ -1,4 +1,5 @@
 const api = require('../../utils/api')
+const haptics = require('../../utils/haptics')
 const { confirmDelete } = require('../../utils/confirm-delete')
 
 function emptyForm() {
@@ -26,12 +27,26 @@ function formatTime(value) {
 function decorate(item) {
   const stock = Number(item.stock || 0)
   const threshold = Number(item.alert_threshold || 0)
+  const low = stock <= 0 || (threshold > 0 && stock <= threshold)
+  const fillPercent = stock <= 0 ? 0 : threshold > 0 ? Math.min(100, Math.max(8, Math.round((stock / (threshold * 2)) * 100))) : 100
   return Object.assign({}, item, {
     stockNum: stock,
     stockText: String(api.round1(stock)),
     unit: item.unit || '份',
     alertText: String(api.round1(threshold)),
-    low: stock <= 0 || (threshold > 0 && stock <= threshold),
+    low: low,
+    outOfStock: stock <= 0,
+    statusText: stock <= 0 ? '已耗尽' : low ? '需补货' : '充足',
+    fillPercent: fillPercent,
+  })
+}
+
+function filterIngredients(list, filterMode, keyword) {
+  const q = String(keyword || '').trim().toLowerCase()
+  return (list || []).filter(function (item) {
+    if (filterMode === 'low' && !item.low) return false
+    if (q && String(item.name || '').toLowerCase().indexOf(q) < 0) return false
+    return true
   })
 }
 
@@ -41,6 +56,9 @@ Page({
     loading: true,
     error: '',
     list: [],
+    filteredList: [],
+    filterMode: 'all',
+    searchKeyword: '',
     lowCount: 0,
     showForm: false,
     form: emptyForm(),
@@ -85,12 +103,16 @@ Page({
       })
       .then(function (rows) {
         const list = rows.map(decorate)
+        const lowCount = list.filter(function (item) {
+          return item.low
+        }).length
+        const nextFilter = that.data.filterMode === 'low' && lowCount === 0 ? 'all' : that.data.filterMode
         that.setData(
           {
             list: list,
-            lowCount: list.filter(function (item) {
-              return item.low
-            }).length,
+            lowCount: lowCount,
+            filterMode: nextFilter,
+            filteredList: filterIngredients(list, nextFilter, that.data.searchKeyword),
             loading: false,
             error: '',
           },
@@ -103,6 +125,41 @@ Page({
         that.setData({ loading: false, error: api.friendly(err) })
       })
   },
+
+  onSearchInput(event) {
+    const searchKeyword = event.detail.value || ''
+    this.setData({
+      searchKeyword: searchKeyword,
+      filteredList: filterIngredients(this.data.list, this.data.filterMode, searchKeyword),
+    })
+  },
+
+  clearSearch() {
+    this.setData({
+      searchKeyword: '',
+      filteredList: filterIngredients(this.data.list, this.data.filterMode, ''),
+    })
+  },
+
+  switchFilter(event) {
+    const mode = event.currentTarget.dataset.mode === 'low' ? 'low' : 'all'
+    if (mode === this.data.filterMode) return
+    haptics.light()
+    this.setData({
+      filterMode: mode,
+      filteredList: filterIngredients(this.data.list, mode, this.data.searchKeyword),
+    })
+  },
+
+  filterLow() {
+    haptics.light()
+    this.setData({
+      filterMode: 'low',
+      filteredList: filterIngredients(this.data.list, 'low', this.data.searchKeyword),
+    })
+  },
+
+  noop() {},
 
   reloadLogs(id) {
     const that = this

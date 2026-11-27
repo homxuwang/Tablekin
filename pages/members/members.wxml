@@ -1,24 +1,35 @@
 <view class="page">
-  <view wx:if="{{error}}" class="banner">{{error}}</view>
-
-  <view wx:if="{{isOwner}}" class="section-title">邀请共有人</view>
-  <view wx:if="{{isOwner}}" class="panel invite">
-    <view class="invite-title">把这个厨房的邀请发给家人</view>
-    <view class="invite-sub">
-      对方点开你分享的卡片并填个称呼，就成为共有人；能和你一样管菜品、管库存、接单。
-    </view>
-    <view wx:if="{{inviteLoading}}" class="invite-sub">正在获取邀请码…</view>
-    <view wx:if="{{inviteError}}" class="banner" bindtap="loadInvite">{{inviteError}} · 点击重新获取</view>
-    <button wx:if="{{inviteCode}}" class="btn-primary invite-btn" open-type="share" disabled="{{inviteLoading || inviteBusy}}">分享邀请链接给微信好友</button>
-    <view wx:if="{{inviteCode}}" class="invite-code" bindtap="copyCode">
-      邀请码 {{inviteCode}} · 点击复制
-    </view>
-    <view wx:if="{{inviteCode}}" class="invite-sub" style="margin-top:10rpx;text-decoration:underline" bindtap="resetInvite">
-      {{inviteBusy ? '正在换码…' : '换一个邀请码（旧链接会失效）'}}
-    </view>
+  <view class="top-head">
+    <view class="top-title">成员与邀请</view>
+    <view class="top-sub">共 {{members.length}} 位家人一起打理这个厨房</view>
   </view>
 
-  <view class="section-title">成员（{{members.length}}）</view>
+  <view wx:if="{{error}}" class="banner">{{error}}</view>
+
+  <view wx:if="{{isOwner}}" class="invite-card">
+    <view class="invite-kicker">共有人邀请</view>
+    <view class="invite-title">邀请家人一起管厨房</view>
+    <view class="invite-sub">
+      点开分享卡片并填个称呼，就能一起管菜品、记库存、接单。
+    </view>
+    <view wx:if="{{inviteLoading}}" class="invite-loading">正在获取邀请码…</view>
+    <view wx:if="{{inviteError}}" class="invite-err" bindtap="loadInvite">{{inviteError}} · 点击重试</view>
+    <block wx:if="{{inviteCode}}">
+      <view class="invite-ticket" bindtap="copyCode">
+        <view class="ticket-label">专属邀请码</view>
+        <view class="ticket-code">{{inviteCode}}</view>
+        <view class="ticket-copy">复制</view>
+      </view>
+      <button class="invite-share" open-type="share" disabled="{{inviteLoading || inviteBusy}}">分享给微信好友</button>
+      <view class="invite-foot">
+        <view class="invite-reset" bindtap="resetInvite">
+          {{inviteBusy ? '正在更换…' : '更换邀请码（旧链接将失效）'}}
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view class="section-title">厨房成员（{{members.length}}）</view>
   <view class="panel">
     <view wx:if="{{loading}}" class="hint">正在加载…</view>
     <view class="m-row" wx:for="{{members}}" wx:key="id">
@@ -40,9 +51,5 @@
 
   <view wx:if="{{!isOwner && myMemberId}}" class="actions">
     <view class="btn-danger" bindtap="leaveKitchen">退出这个厨房</view>
-  </view>
-
-  <view class="actions">
-    <view class="btn-ghost" bindtap="goBack">返回</view>
   </view>
 </view>

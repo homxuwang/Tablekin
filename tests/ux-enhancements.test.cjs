@@ -180,3 +180,113 @@ test('首页支持快捷跳转输码加入页', () => {
   page.goJoin()
   assert.ok(calls.some(c => c[0] === 'navigate' && c[1].url === '/pages/join/join'))
 })
+
+test('食材仓库支持按需补货筛选、关键词搜索与库存状态展示', async () => {
+  const { page } = pageHarness('pages/ingredients/ingredients.js', {
+    requireUser: async () => ({ id: 'chef-1' }),
+    fetchIngredients: async () => [
+      { id: 1, name: '五花肉', unit: '克', stock: 500, alert_threshold: 200 },
+      { id: 2, name: '鸡蛋', unit: '个', stock: 2, alert_threshold: 6 },
+      { id: 3, name: '香菜', unit: '把', stock: 0, alert_threshold: 1 },
+    ],
+    round1: n => Math.round(Number(n || 0) * 10) / 10,
+    friendly: e => e.message,
+  })
+  page.kitchenId = 9
+  await page.load()
+  assert.equal(page.data.lowCount, 2)
+  assert.equal(page.data.filteredList.length, 3)
+  assert.equal(page.data.list[2].statusText, '已耗尽')
+  assert.equal(page.data.list[1].statusText, '需补货')
+  assert.equal(page.data.list[0].statusText, '充足')
+
+  page.filterLow()
+  assert.equal(page.data.filterMode, 'low')
+  assert.equal(page.data.filteredList.length, 2)
+
+  page.onSearchInput({ detail: { value: '鸡蛋' } })
+  assert.equal(page.data.filteredList.length, 1)
+  assert.equal(page.data.filteredList[0].id, 2)
+
+  page.clearSearch()
+  assert.equal(page.data.filteredList.length, 2)
+  page.switchFilter({ currentTarget: { dataset: { mode: 'all' } } })
+  assert.equal(page.data.filteredList.length, 3)
+})
+
+test('厨房管理页支持按分类筛选菜品并一键切换在售/下架', async () => {
+  const updated = []
+  const { page } = pageHarness('pages/manage/manage.js', {
+    requireUser: async () => ({ id: 'owner-1' }),
+    fetchKitchen: async () => ({ id: 5, name: '老王家', owner_id: 'owner-1' }),
+    fetchCategories: async () => [
+      { id: 10, name: '热菜', is_public: true },
+      { id: 20, name: '汤品', is_public: true },
+    ],
+    fetchDishes: async () => [
+      { id: 1, name: '红烧肉', category_id: 10, is_public: true, is_available: true },
+      { id: 2, name: '紫菜蛋花汤', category_id: 20, is_public: true, is_available: true },
+      { id: 3, name: '拍黄瓜', category_id: null, is_public: false, is_available: false },
+    ],
+    fetchIngredients: async () => [],
+    fetchShortageAlerts: async () => [],
+    fetchOrders: async () => [],
+    fetchMembers: async () => [{ id: 1, user_id: 'owner-1' }],
+    updateDish: async (id, patch) => {
+      updated.push({ id, patch })
+      return { id, ...patch }
+    },
+    friendly: e => e.message,
+  })
+  page.kitchenId = 5
+  await page.load()
+  assert.equal(page.data.filteredDishes.length, 3)
+  assert.equal(page.data.hasUncatDishes, true)
+
+  page.pickCatFilter({ currentTarget: { dataset: { id: '10' } } })
+  assert.equal(page.data.filteredDishes.length, 1)
+  assert.equal(page.data.filteredDishes[0].name, '红烧肉')
+
+  await page.toggleDishAvailable({ currentTarget: { dataset: { id: 1 } } })
+  assert.deepEqual(structuredClone(updated), [{ id: 1, patch: { is_available: false } }])
+  assert.equal(page.data.dishes[0].is_available, false)
+  assert.equal(page.data.filteredDishes[0].is_available, false)
+  assert.equal(page.data.dishBusyId, 0)
+
+  page.pickCatFilter({ currentTarget: { dataset: { id: 'uncat' } } })
+  assert.equal(page.data.filteredDishes.length, 1)
+  assert.equal(page.data.filteredDishes[0].name, '拍黄瓜')
+})
+
+test('搜索页记录最近搜索历史并支持一键回搜与清空', async () => {
+  const searched = []
+  const { page, storage } = pageHarness('pages/search/search.js', {
+    asArray: v => (Array.isArray(v) ? v : []),
+    listKitchenTags: async () => [],
+    searchDishes: async params => {
+      searched.push(params.keyword)
+      return []
+    },
+    signImageUrls: async () => ({}),
+    friendly: e => e.message,
+  })
+  page.onLoad({ kitchenId: 0 })
+  page.setData({ keyword: '红烧肉' })
+  page.runSearch()
+  assert.deepEqual(structuredClone(page.data.history), ['红烧肉'])
+  assert.deepEqual(structuredClone(storage.get('recent_search_keywords')), ['红烧肉'])
+
+  page.setData({ keyword: '番茄炒蛋' })
+  page.runSearch()
+  assert.deepEqual(structuredClone(page.data.history), ['番茄炒蛋', '红烧肉'])
+
+  page.pickHistory({ currentTarget: { dataset: { word: '红烧肉' } } })
+  assert.equal(page.data.keyword, '红烧肉')
+  assert.deepEqual(structuredClone(page.data.history), ['红烧肉', '番茄炒蛋'])
+  assert.equal(searched[searched.length - 1], '红烧肉')
+
+  page.clearHistory()
+  assert.deepEqual(structuredClone(page.data.history), [])
+  assert.equal(storage.has('recent_search_keywords'), false)
+})
+

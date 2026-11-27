@@ -1,7 +1,36 @@
 const api = require('../../utils/api')
 const dishImages = require('../../utils/dish-images')
 const dishTags = require('../../utils/dish-tags')
+const haptics = require('../../utils/haptics')
 const recent = require('../../utils/recent')
+
+const HISTORY_KEY = 'recent_search_keywords'
+const MAX_HISTORY = 8
+
+function readHistory() {
+  try {
+    const raw = wx.getStorageSync(HISTORY_KEY)
+    return Array.isArray(raw) ? raw.filter(Boolean).slice(0, MAX_HISTORY) : []
+  } catch (e) {
+    return []
+  }
+}
+
+function saveHistory(keyword) {
+  const clean = String(keyword || '').trim()
+  if (!clean) return readHistory()
+  const list = readHistory().filter(function (item) {
+    return item !== clean
+  })
+  list.unshift(clean)
+  const next = list.slice(0, MAX_HISTORY)
+  try {
+    wx.setStorageSync(HISTORY_KEY, next)
+  } catch (e) {
+    // 存储异常不影响搜索
+  }
+  return next
+}
 
 function decorateKitchen(kitchen, mineIds) {
   const isMine = !!mineIds[kitchen.id]
@@ -28,6 +57,7 @@ Page({
     allTags: [],
     pickedTags: [],
     tagMode: 'all',
+    history: [],
   },
 
   onLoad(options) {
@@ -37,9 +67,27 @@ Page({
     const mode = opts.mode === 'kitchen' ? 'kitchen' : 'dish'
     // 没有「本厨房」可搜时默认落到「所有厨房」，免得点进去只有一个空结果
     const scope = kitchenId ? 'current' : 'all'
-    this.setData({ kitchenId: kitchenId, mode: mode, scope: scope })
+    this.setData({ kitchenId: kitchenId, mode: mode, scope: scope, history: readHistory() })
     if (kitchenId) this.loadKitchenName(kitchenId)
     this.loadTags()
+  },
+
+  pickHistory(event) {
+    const word = String(event.currentTarget.dataset.word || '').trim()
+    if (!word) return
+    haptics.light()
+    this.setData({ keyword: word, focus: false })
+    this.runSearch()
+  },
+
+  clearHistory() {
+    haptics.light()
+    try {
+      wx.removeStorageSync(HISTORY_KEY)
+    } catch (e) {
+      // ignore
+    }
+    this.setData({ history: [] })
   },
 
   // ---------- 标签 ----------
@@ -169,7 +217,9 @@ Page({
       this.setData({ dishes: [], kitchens: [], searched: false, loading: false, error: '' })
       return
     }
-    this.setData({ loading: true, error: '', searched: true })
+    const patch = { loading: true, error: '', searched: true }
+    if (keyword) patch.history = saveHistory(keyword)
+    this.setData(patch)
     // 打字快时会有多个请求在路上，只认最后一次
     this.seq = (this.seq || 0) + 1
     const seq = this.seq

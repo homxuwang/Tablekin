@@ -17,17 +17,19 @@
     <view class="cancel" bindtap="goBack">取消</view>
   </view>
 
-  <view class="tabs">
-    <view
-      class="tab {{mode === 'dish' ? 'tab-on' : ''}}"
-      bindtap="switchMode"
-      data-mode="dish"
-    >找菜</view>
-    <view
-      class="tab {{mode === 'kitchen' ? 'tab-on' : ''}}"
-      bindtap="switchMode"
-      data-mode="kitchen"
-    >找厨房</view>
+  <view class="tabs-wrap">
+    <view class="tabs-track">
+      <view
+        class="tab {{mode === 'dish' ? 'tab-on' : ''}}"
+        bindtap="switchMode"
+        data-mode="dish"
+      >找菜</view>
+      <view
+        class="tab {{mode === 'kitchen' ? 'tab-on' : ''}}"
+        bindtap="switchMode"
+        data-mode="kitchen"
+      >找厨房</view>
+    </view>
   </view>
 
   <view wx:if="{{mode === 'dish'}}" class="scopes">
@@ -41,6 +43,22 @@
       bindtap="pickScope"
       data-scope="all"
     >所有厨房</view>
+  </view>
+
+  <view wx:if="{{!searched && history.length}}" class="history-card">
+    <view class="history-head">
+      <text class="history-title">最近搜索</text>
+      <text class="history-clear" bindtap="clearHistory">清空</text>
+    </view>
+    <view class="history-row">
+      <view
+        class="history-chip"
+        wx:for="{{history}}"
+        wx:key="*this"
+        data-word="{{item}}"
+        bindtap="pickHistory"
+      >{{item}}</view>
+    </view>
   </view>
 
   <block wx:if="{{mode === 'dish' && allTags.length}}">
