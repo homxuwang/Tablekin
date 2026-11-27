@@ -1,0 +1,19 @@
+<view class="bar">
+  <view class="bar-content">
+  <view
+    class="item {{active === index ? 'on' : ''}}"
+    wx:for="{{list}}"
+    wx:key="pagePath"
+    data-index="{{index}}"
+    bindtap="onTap"
+  >
+    <view class="ic ic-{{item.icon}}">
+      <view class="s1"></view>
+      <view class="s2"></view>
+      <view class="s3"></view>
+      <view wx:if="{{index === 2 && unreadCount > 0}}" class="badge">{{unreadCount > 99 ? '99+' : unreadCount}}</view>
+    </view>
+    <view class="label">{{item.text}}</view>
+  </view>
+  </view>
+</view>

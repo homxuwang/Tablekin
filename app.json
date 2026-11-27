@@ -1,0 +1,49 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/sort/sort",
+    "pages/chef/chef",
+    "pages/orders/orders",
+    "pages/menu/menu",
+    "pages/search/search",
+    "pages/cart/cart",
+    "pages/order-detail/order-detail",
+    "pages/dish/dish",
+    "pages/ingredients/ingredients",
+    "pages/manage/manage",
+    "pages/members/members",
+    "pages/kitchen-form/kitchen-form",
+    "pages/join/join"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTitleText": "吃好喝好",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F5F6F8"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#9AA1A9",
+    "selectedColor": "#E86A17",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "点菜"
+      },
+      {
+        "pagePath": "pages/chef/chef",
+        "text": "下厨"
+      },
+      {
+        "pagePath": "pages/orders/orders",
+        "text": "订单"
+      }
+    ]
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

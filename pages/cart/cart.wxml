@@ -1,0 +1,108 @@
+<view class="page">
+  <view wx:if="{{items.length === 0}}" class="empty">
+    <view>还没有点菜</view>
+    <view>回到菜单，点菜品右侧的「+」加入吧</view>
+  </view>
+
+  <block wx:else>
+    <view class="panel">
+      <view class="panel-title">{{kitchenName || '点菜清单'}}</view>
+      <view class="row" wx:for="{{items}}" wx:key="id">
+        <view class="row-name">{{item.name}}</view>
+        <view class="stepper">
+          <view class="step" bindtap="decrease" data-id="{{item.id}}">-</view>
+          <view class="step-num">{{item.count}}</view>
+          <view class="step" bindtap="increase" data-id="{{item.id}}">+</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{shortage}}" class="warn-card">
+      <view class="warn-title">食材不够，这几样先调整一下</view>
+      <view class="warn-line" wx:for="{{shortage.problems}}" wx:key="ingredientId">
+        <view class="warn-ing">{{item.ingredientName}}</view>
+        <view class="warn-detail">
+          需要 {{item.needed}}{{item.unit}}，只剩 {{item.stock}}{{item.unit}}
+          <block wx:if="{{item.dishes}}"> · 用在「{{item.dishes}}」</block>
+        </view>
+      </view>
+    </view>
+
+    <view class="panel">
+      <view class="panel-title">什么时候吃</view>
+      <picker mode="date" value="{{orderDate}}" start="{{today}}" end="{{maxDate}}" bindchange="onMealDate">
+        <view class="date-row"><text>就餐日期</text><text class="date-value">{{orderDate}}　›</text></view>
+      </picker>
+      <view class="chips">
+        <view wx:if="{{orderDate === today}}" class="chip {{mealType === 'asap' ? 'chip-on' : ''}}" bindtap="pickAsap">尽快</view>
+        <view class="chip {{mealType === 'point' ? 'chip-on' : ''}}" bindtap="pickPoint">定个时间点</view>
+        <view class="chip {{mealType === 'range' ? 'chip-on' : ''}}" bindtap="pickRange">定个时间段</view>
+      </view>
+
+      <block wx:if="{{mealType !== 'asap'}}">
+        <view class="time-row">
+          <picker mode="time" value="{{timeStart}}" bindchange="onTimeStart">
+            <view class="time-box">{{timeStart || '选时间'}}</view>
+          </picker>
+          <block wx:if="{{mealType === 'range'}}">
+            <view class="time-sep">到</view>
+            <picker mode="time" value="{{timeEnd}}" bindchange="onTimeEnd">
+              <view class="time-box">{{timeEnd || '不限'}}</view>
+            </picker>
+            <view class="time-clear" bindtap="clearEnd">不限</view>
+          </block>
+        </view>
+        <view class="quick-row">
+          <view
+            class="quick-chip {{timeStart === item ? 'quick-on' : ''}}"
+            wx:for="{{quickTimes}}"
+            wx:key="*this"
+            bindtap="pickQuick"
+            data-time="{{item}}"
+          >{{item}}</view>
+        </view>
+      </block>
+
+      <view class="time-hint">{{timeHint}}</view>
+    </view>
+
+    <view class="panel">
+      <view class="field">
+        <view class="field-label">你是谁（大厨要知道是谁点的）</view>
+        <input
+          class="field-input"
+          value="{{dinerName}}"
+          bindinput="onNameInput"
+          placeholder="例如：爸爸、小明"
+          maxlength="12"
+        />
+      </view>
+      <view class="field">
+        <view class="field-label">备注（可不填）</view>
+        <textarea
+          class="field-textarea short"
+          value="{{note}}"
+          bindinput="onNoteInput"
+          placeholder="少放辣、米饭两碗、孩子不吃葱…"
+          maxlength="200"
+        ></textarea>
+      </view>
+    </view>
+
+    <view class="actions">
+      <view class="btn-ghost" bindtap="copySummary">复制清单</view>
+      <view class="btn-ghost" bindtap="goMenu">继续点菜</view>
+      <view class="btn-danger" bindtap="clearAll">清空清单</view>
+    </view>
+
+    <view class="bottom-bar">
+      <view class="bb-left">
+        <view class="bb-total">共 {{total}} 份</view>
+        <view class="bb-sub">想吃：{{mealText}}</view>
+      </view>
+      <view class="bb-btn {{submitting || shortage ? 'disabled' : ''}}" bindtap="submitOrder">
+        {{submitting ? '发送中…' : (shortage ? '食材不够' : '发给大厨')}}
+      </view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,143 @@
+.bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  background: #FFFFFF;
+  border-top: 2rpx solid #EDEEF1;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bar-content {
+  display: flex;
+  height: 108rpx;
+}
+
+.item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #9AA1A9;
+}
+
+.item.on {
+  color: #E86A17;
+}
+
+.ic {
+  position: relative;
+  width: 44rpx;
+  height: 40rpx;
+  flex-shrink: 0;
+}
+
+.ic .s1,
+.ic .s2,
+.ic .s3 {
+  position: absolute;
+  display: none;
+  box-sizing: border-box;
+}
+
+/* 点菜：一只碗 */
+.ic-eat .s1 {
+  display: block;
+  left: 5rpx;
+  top: 13rpx;
+  width: 34rpx;
+  height: 18rpx;
+  border: 3rpx solid currentColor;
+  border-top: none;
+  border-radius: 0 0 20rpx 20rpx;
+}
+
+.ic-eat .s2 {
+  display: block;
+  left: 2rpx;
+  top: 10rpx;
+  width: 40rpx;
+  height: 3rpx;
+  border-radius: 3rpx;
+  background: currentColor;
+}
+
+/* 下厨：一口锅 */
+.ic-cook .s1 {
+  display: block;
+  left: 2rpx;
+  top: 9rpx;
+  width: 28rpx;
+  height: 28rpx;
+  border: 3rpx solid currentColor;
+  border-radius: 50%;
+}
+
+.ic-cook .s2 {
+  display: block;
+  left: 28rpx;
+  top: 17rpx;
+  width: 15rpx;
+  height: 3rpx;
+  border-radius: 3rpx;
+  background: currentColor;
+}
+
+/* 订单：一张单子 */
+.ic-order .s1 {
+  display: block;
+  left: 7rpx;
+  top: 5rpx;
+  width: 30rpx;
+  height: 32rpx;
+  border: 3rpx solid currentColor;
+  border-radius: 6rpx;
+}
+
+.ic-order .s2 {
+  display: block;
+  left: 14rpx;
+  top: 14rpx;
+  width: 16rpx;
+  height: 3rpx;
+  border-radius: 3rpx;
+  background: currentColor;
+}
+
+.ic-order .s3 {
+  display: block;
+  left: 14rpx;
+  top: 23rpx;
+  width: 16rpx;
+  height: 3rpx;
+  border-radius: 3rpx;
+  background: currentColor;
+}
+
+.label {
+  font-size: 20rpx;
+  margin-top: 8rpx;
+  height: 28rpx;
+  line-height: 28rpx;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.badge {
+  position: absolute;
+  top: -8rpx;
+  right: -24rpx;
+  min-width: 26rpx;
+  padding: 3rpx 7rpx;
+  background: #D64545;
+  border: 3rpx solid #FFFFFF;
+  border-radius: 999rpx;
+  color: #FFFFFF;
+  font-size: 18rpx;
+  line-height: 24rpx;
+  text-align: center;
+}

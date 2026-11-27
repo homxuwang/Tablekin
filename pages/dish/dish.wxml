@@ -1,0 +1,231 @@
+<view wx:if="{{!editMode}}" class="page">
+  <view wx:if="{{loading}}" class="empty">正在加载…</view>
+  <view wx:elif="{{error}}" class="empty">{{error}}</view>
+
+  <block wx:else>
+    <swiper wx:if="{{images.length > 0}}" class="hero" indicator-dots="{{images.length > 1}}" indicator-active-color="#E86A17">
+      <swiper-item wx:for="{{images}}" wx:key="path">
+        <image wx:if="{{item.url}}" class="hero" src="{{item.url}}" mode="aspectFill" data-path="{{item.path}}" bindtap="previewImages"></image>
+        <view wx:else class="hero hero-plain image-unavailable" data-path="{{item.path}}" bindtap="previewImages">图片暂不可用</view>
+      </swiper-item>
+    </swiper>
+    <view wx:else class="hero hero-plain">{{form.name}}</view>
+
+    <view class="panel">
+      <view class="dish-title">{{form.name}}</view>
+      <view wx:if="{{form.description}}" class="dish-sub">{{form.description}}</view>
+      <view class="chips">
+        <text class="chip">{{form.is_public ? '菜单公开' : '仅自己可见'}}</text>
+        <text class="chip">{{form.is_available ? '在售' : '已下架'}}</text>
+        <text class="chip {{form.is_recipe_public ? '' : 'chip-dim'}}">{{form.is_recipe_public ? '菜谱公开' : '菜谱私密'}}</text>
+      </view>
+      <view wx:if="{{form.tags.length}}" class="chips chips-tags">
+        <text class="chip chip-tag" wx:for="{{form.tags}}" wx:key="*this">{{item}}</text>
+      </view>
+    </view>
+
+    <view class="panel">
+      <view class="panel-title">菜谱</view>
+      <view wx:if="{{form.recipe && recipeVisible}}" class="recipe">{{form.recipe}}</view>
+      <view wx:elif="{{form.recipe}}" class="recipe-locked">这道菜的菜谱还没有公开</view>
+      <view wx:else class="recipe-locked">还没有录入菜谱</view>
+    </view>
+
+    <view class="actions">
+      <view wx:if="{{canEdit}}" class="btn-primary" bindtap="toggleEdit">编辑这道菜</view>
+      <view wx:else class="btn-ghost" bindtap="goKitchenMenu">去这个厨房点菜</view>
+    </view>
+  </block>
+</view>
+
+<view wx:else class="page">
+  <view class="panel">
+    <view class="field">
+      <view class="field-label">菜名</view>
+      <input
+        class="field-input"
+        value="{{form.name}}"
+        disabled="{{saving || deleting || uploading || choosingImages}}"
+        data-field="name"
+        bindinput="onInput"
+        placeholder="例如：红烧排骨"
+        maxlength="40"
+      />
+    </view>
+    <view class="field">
+      <view class="field-label">分类</view>
+      <picker
+        mode="selector"
+        range="{{categoryLabels}}"
+        value="{{categoryIndex}}"
+        disabled="{{saving || deleting || uploading || choosingImages}}"
+        bindchange="onCategoryChange"
+      >
+        <view class="picker-value">{{categoryLabels[categoryIndex]}}</view>
+      </picker>
+    </view>
+    <view class="field">
+      <view class="field-label">简介</view>
+      <textarea
+        class="field-textarea short"
+        value="{{form.description}}"
+        disabled="{{saving || deleting || uploading || choosingImages}}"
+        data-field="description"
+        bindinput="onInput"
+        placeholder="一句话介绍：口味、分量、适合什么场合"
+        maxlength="200"
+      ></textarea>
+    </view>
+    <view class="field">
+      <view class="field-label">标签 · {{tags.length}}/{{maxTags}}</view>
+      <view class="tag-hint">打好标签，别人就能按标签把这道菜找出来</view>
+      <view class="tag-box">
+        <view class="tag-item" wx:for="{{tags}}" wx:key="*this">
+          {{item}}<text class="tag-x" data-name="{{item}}" bindtap="removeTag">×</text>
+        </view>
+        <input
+          wx:if="{{tags.length < maxTags}}"
+          class="tag-input"
+          value="{{tagInput}}"
+          disabled="{{saving || deleting || uploading || choosingImages}}"
+          bindinput="onTagInput"
+          bindconfirm="confirmTag"
+          confirm-type="done"
+          placeholder="输入后按完成"
+          maxlength="12"
+        />
+      </view>
+      <view wx:if="{{tagSuggestions.length}}" class="tag-suggest">
+        <view class="tag-hint">这个厨房已经在用的标签，点一下就能复用</view>
+        <view class="tag-row">
+          <view
+            class="tag-pick"
+            wx:for="{{tagSuggestions}}"
+            wx:key="name"
+            data-name="{{item.name}}"
+            bindtap="addSuggestion"
+          >{{item.name}}<text class="tag-count">{{item.count}}</text></view>
+        </view>
+      </view>
+    </view>
+    <view class="field">
+      <view class="field-label">菜品图片 · {{images.length}}/9</view>
+      <view class="image-hint">首图会展示在点菜列表里，点击图片可放大</view>
+      <view class="image-grid">
+        <view class="image-card" wx:for="{{images}}" wx:key="path">
+          <view class="image-preview" data-path="{{item.path}}" bindtap="previewImages">
+            <image wx:if="{{item.url}}" class="image-thumbnail" src="{{item.url}}" mode="aspectFill"></image>
+            <view wx:else class="image-placeholder">暂不可用</view>
+            <view wx:if="{{index === 0}}" class="image-cover">首图</view>
+          </view>
+          <view class="image-tools {{saving || deleting || uploading || choosingImages ? 'image-disabled' : ''}}">
+            <view class="image-set-cover" data-path="{{item.path}}" bindtap="setCover">{{index === 0 ? '当前首图' : '设为首图'}}</view>
+            <view class="image-remove" data-path="{{item.path}}" bindtap="removeImage">移除</view>
+          </view>
+        </view>
+        <view wx:if="{{images.length < 9}}" class="image-card">
+          <view class="image-upload {{saving || deleting || uploading || choosingImages ? 'image-disabled' : ''}}" bindtap="chooseImage">
+            <view class="image-plus">+</view>
+            <view>{{uploading ? uploadProgress : (choosingImages ? '选择中…' : '上传图片')}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="panel">
+    <view class="panel-title">用料（用来算食材够不够）</view>
+    <view wx:if="{{recipe.length === 0}}" class="panel-foot">
+      还没挂食材。不挂的话，这道菜永远都能点，不做库存判断。
+    </view>
+    <view class="recipe-row" wx:for="{{recipe}}" wx:key="ingredient_id">
+      <view class="recipe-name">
+        {{item.name}}<text class="recipe-unit"> · {{item.unit}}</text>
+      </view>
+      <input
+        class="recipe-amount"
+        type="digit"
+        value="{{item.amount}}"
+        disabled="{{saving || deleting || uploading || choosingImages}}"
+        data-index="{{index}}"
+        bindinput="onRecipeAmountInput"
+        placeholder="每份用量"
+      />
+      <view class="recipe-del" bindtap="removeRecipeRow" data-index="{{index}}">删除</view>
+    </view>
+    <view wx:if="{{ingredients.length === 0}}" class="panel-foot">
+      仓库里还没有食材，先去「食材仓库」建几个。
+      <text class="recipe-link" bindtap="goIngredients">去食材仓库</text>
+    </view>
+    <view wx:else class="recipe-add">
+      <picker mode="selector" range="{{ingredientLabels}}" disabled="{{saving || deleting || uploading || choosingImages}}" bindchange="onPickIngredient">
+        <view class="recipe-add-btn">+ 添加食材</view>
+      </picker>
+    </view>
+    <view wx:if="{{recipe.length > 0}}" class="panel-foot">
+      用量按「一份菜」算。比如做一份红烧肉用 300 克五花肉，就填 300。
+    </view>
+  </view>
+
+  <view class="panel">
+    <view class="field">
+      <view class="field-label">菜谱</view>
+      <textarea
+        class="field-textarea"
+        value="{{form.recipe}}"
+        disabled="{{saving || deleting || uploading || choosingImages}}"
+        data-field="recipe"
+        bindinput="onInput"
+        placeholder="用料、用量、步骤…想写多细就写多细"
+        maxlength="5000"
+      ></textarea>
+    </view>
+  </view>
+
+  <view class="panel">
+    <view class="field row-between">
+      <view class="switch-text">
+        <view class="switch-label">在菜单里公开</view>
+        <view class="switch-hint">关闭后只有这个厨房的成员能看到</view>
+      </view>
+      <switch
+        checked="{{form.is_public}}"
+        disabled="{{saving || deleting || uploading || choosingImages}}"
+        data-field="is_public"
+        bindchange="onSwitch"
+        color="#E86A17"
+      />
+    </view>
+    <view class="field row-between">
+      <view class="switch-text">
+        <view class="switch-label">公开菜谱</view>
+        <view class="switch-hint">关闭后别人能看到菜名，但看不到菜谱</view>
+      </view>
+      <switch
+        checked="{{form.is_recipe_public}}"
+        disabled="{{saving || deleting || uploading || choosingImages}}"
+        data-field="is_recipe_public"
+        bindchange="onSwitch"
+        color="#E86A17"
+      />
+    </view>
+    <view class="field row-between">
+      <view class="switch-text">
+        <view class="switch-label">在售</view>
+        <view class="switch-hint">关闭后仍留在菜单里，但会标注「已下架」</view>
+      </view>
+      <switch
+        checked="{{form.is_available}}"
+        disabled="{{saving || deleting || uploading || choosingImages}}"
+        data-field="is_available"
+        bindchange="onSwitch"
+        color="#E86A17"
+      />
+    </view>
+  </view>
+
+  <view class="actions">
+    <view class="btn-primary {{saving || deleting || uploading || choosingImages ? 'disabled' : ''}}" bindtap="save">{{saving ? '保存中…' : (uploading ? '请等待图片上传' : '保存')}}</view>
+    <view wx:if="{{dishId}}" class="btn-danger {{saving || deleting || uploading || choosingImages ? 'disabled' : ''}}" bindtap="remove">{{deleting ? '删除中…' : '删除这道菜'}}</view>
+  </view>
+</view>

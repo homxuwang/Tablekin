@@ -1,0 +1,116 @@
+<view class="page">
+  <view class="header">
+    <view class="header-top">
+      <view class="header-left">
+        <view class="title">{{kitchen.name || '今日菜单'}}</view>
+        <view class="subtitle">{{dishes.length}} 道菜 · {{categories.length}} 个分类</view>
+      </view>
+      <view class="header-search" bindtap="goSearch">
+        <icon type="search" size="17" color="#E86A17"></icon>
+      </view>
+    </view>
+    <view class="header-tools">
+      <view class="header-btn" bindtap="goOrders">{{isMember ? '接单' : '我的单'}}</view>
+      <view wx:if="{{isMember}}" class="header-btn" bindtap="goManage">管理</view>
+      <view class="header-btn header-btn-soft" bindtap="goHome">{{isMember ? '我的厨房' : '换一家'}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{error}}" class="banner">
+    <view>{{error}}</view>
+    <view class="banner-go" bindtap="goHome">去看看别的厨房</view>
+  </view>
+
+  <view wx:if="{{blockedCount > 0}}" class="notice">
+    有 {{blockedCount}} 道菜因为食材不够暂时点不了
+  </view>
+
+  <view wx:if="{{error}}" class="empty">
+    <view>这个厨房暂时打不开</view>
+    <view>{{missing ? '它可能已经被删掉了，或者你已经不在里面' : '检查一下网络，再下拉刷新试试'}}</view>
+  </view>
+
+  <view wx:if="{{!error && allTags.length}}" class="tagbar">
+    <scroll-view class="tagbar-scroll" scroll-x>
+      <view class="tagbar-row">
+        <view
+          class="tagpick {{pickedTags.length === 0 ? 'tagpick-on' : ''}}"
+          bindtap="clearTags"
+        >全部</view>
+        <view
+          class="tagpick {{item.picked ? 'tagpick-on' : ''}}"
+          wx:for="{{allTags}}"
+          wx:key="name"
+          data-name="{{item.name}}"
+          bindtap="pickTag"
+        >{{item.name}}<text class="tagpick-count">{{item.count}}</text></view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view wx:if="{{!error}}" class="body">
+    <scroll-view class="cats" scroll-y>
+      <view
+        class="cat {{activeCategoryId === 0 ? 'cat-on' : ''}}"
+        bindtap="pickCategory"
+        data-id="0"
+      >全部</view>
+      <view
+        wx:for="{{categories}}"
+        wx:key="id"
+        class="cat {{activeCategoryId === item.id ? 'cat-on' : ''}}"
+        bindtap="pickCategory"
+        data-id="{{item.id}}"
+      >{{item.name}}</view>
+      <view class="cats-tail"></view>
+    </scroll-view>
+
+    <scroll-view class="dishlist" scroll-y>
+      <view wx:if="{{loading}}" class="empty">正在准备菜单…</view>
+
+      <view wx:elif="{{shownDishes.length === 0}}" class="empty">
+        <view>{{pickedTags.length ? '没有同时符合这些标签的菜' : '这个分类下还没有菜'}}</view>
+        <view wx:if="{{isMember && !pickedTags.length}}">到「管理」里新增分类和菜品吧</view>
+        <view wx:else>换个分类，或者少选几个标签看看</view>
+      </view>
+
+      <block wx:else>
+        <view class="dish {{item.soldOut ? 'dish-off' : ''}}" wx:for="{{shownDishes}}" wx:key="id">
+          <view class="dish-hit" bindtap="openDish" data-id="{{item.id}}">
+            <image
+              wx:if="{{item.imageUrl}}"
+              class="cover"
+              src="{{item.imageUrl}}"
+              mode="aspectFill"
+            ></image>
+            <view wx:else class="cover cover-plain">{{item.initial}}</view>
+            <view class="dish-main">
+              <view class="dish-name">{{item.name}}</view>
+              <view wx:if="{{item.description}}" class="dish-desc">{{item.description}}</view>
+              <view wx:if="{{item.tagList.length}}" class="dish-labels">
+                <text class="label" wx:for="{{item.tagList}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+              </view>
+              <view class="dish-tags">
+                <text wx:if="{{item.recipe}}" class="tag">有菜谱</text>
+                <text wx:if="{{item.canMakeText}}" class="tag tag-stock">{{item.canMakeText}}</text>
+                <text wx:if="{{item.soldOut}}" class="tag tag-off">暂无</text>
+                <text wx:if="{{!item.is_available}}" class="tag tag-off">已下架</text>
+              </view>
+            </view>
+          </view>
+          <view wx:if="{{item.soldOut}}" class="add add-off" catchtap="explainShortageById" data-id="{{item.id}}">—</view>
+          <view wx:else class="add" catchtap="addToCart" data-id="{{item.id}}">+</view>
+        </view>
+        <view class="list-tail"></view>
+      </block>
+    </scroll-view>
+  </view>
+
+  <view wx:if="{{cartCount > 0}}" class="cartbar">
+    <view class="cartbar-left">
+      <view class="cartbar-count">{{cartCount}}</view>
+      <view class="cartbar-text">道菜已选</view>
+    </view>
+    <view class="cartbar-btn" bindtap="goCart">查看点菜清单</view>
+  </view>
+</view>

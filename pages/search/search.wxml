@@ -1,0 +1,134 @@
+<view class="page">
+  <view class="bar">
+    <view class="box">
+      <icon type="search" size="15" color="#9AA1A9"></icon>
+      <input
+        class="box-input"
+        value="{{keyword}}"
+        focus="{{focus}}"
+        bindinput="onInput"
+        bindconfirm="runSearch"
+        confirm-type="search"
+        placeholder="{{mode === 'dish' ? '搜菜名，比如「红烧肉」' : '搜厨房名，比如「老王家」'}}"
+        maxlength="20"
+      />
+      <view wx:if="{{keyword}}" class="box-clear" bindtap="clearKeyword">×</view>
+    </view>
+    <view class="cancel" bindtap="goBack">取消</view>
+  </view>
+
+  <view class="tabs">
+    <view
+      class="tab {{mode === 'dish' ? 'tab-on' : ''}}"
+      bindtap="switchMode"
+      data-mode="dish"
+    >找菜</view>
+    <view
+      class="tab {{mode === 'kitchen' ? 'tab-on' : ''}}"
+      bindtap="switchMode"
+      data-mode="kitchen"
+    >找厨房</view>
+  </view>
+
+  <view wx:if="{{mode === 'dish'}}" class="scopes">
+    <view
+      class="scope {{scope === 'current' ? 'scope-on' : ''}}"
+      bindtap="pickScope"
+      data-scope="current"
+    >本厨房{{kitchenName ? '「' + kitchenName + '」' : ''}}</view>
+    <view
+      class="scope {{scope === 'all' ? 'scope-on' : ''}}"
+      bindtap="pickScope"
+      data-scope="all"
+    >所有厨房</view>
+  </view>
+
+  <block wx:if="{{mode === 'dish' && allTags.length}}">
+    <view class="tagbar">
+      <view class="tagbar-head">
+        <text class="tagbar-title">按标签找</text>
+        <view class="tagmodes">
+          <text
+            class="tagmode {{tagMode === 'all' ? 'tagmode-on' : ''}}"
+            data-mode="all"
+            bindtap="switchTagMode"
+          >全部满足</text>
+          <text
+            class="tagmode {{tagMode === 'any' ? 'tagmode-on' : ''}}"
+            data-mode="any"
+            bindtap="switchTagMode"
+          >任一</text>
+        </view>
+      </view>
+      <view class="tagbar-row">
+        <view
+          class="tagpick {{item.picked ? 'tagpick-on' : ''}}"
+          wx:for="{{allTags}}"
+          wx:key="name"
+          data-name="{{item.name}}"
+          bindtap="pickTag"
+        >{{item.name}}<text class="tagpick-count">{{item.count}}</text></view>
+      </view>
+    </view>
+  </block>
+
+  <view wx:if="{{error}}" class="banner">{{error}}</view>
+
+  <view wx:if="{{loading}}" class="hint">正在搜索…</view>
+
+  <view wx:elif="{{!searched}}" class="hint">
+    <block wx:if="{{mode === 'dish'}}">输入菜名，就能在{{scope === 'current' ? '这个厨房里' : '所有厨房里'}}找到它</block>
+    <block wx:else>输入厨房名，看看别人家今天做什么</block>
+  </view>
+
+  <block wx:elif="{{mode === 'dish'}}">
+    <view wx:if="{{dishes.length === 0}}" class="hint">
+      没有叫这个的菜<block wx:if="{{scope === 'current'}}">，切到「所有厨房」再找找？</block>
+    </view>
+    <view
+      class="dcard"
+      wx:for="{{dishes}}"
+      wx:key="id"
+      bindtap="openDish"
+      data-id="{{item.id}}"
+      data-kitchen="{{item.kitchen_id}}"
+    >
+      <image wx:if="{{item.imageUrl}}" class="thumb" src="{{item.imageUrl}}" mode="aspectFill"></image>
+      <view wx:else class="thumb thumb-plain">{{item.initial}}</view>
+      <view class="dcard-main">
+        <view class="dcard-name">{{item.name}}</view>
+        <view wx:if="{{item.description}}" class="dcard-sub">{{item.description}}</view>
+        <view wx:if="{{item.tagList.length}}" class="dcard-tags">
+          <text class="dtag" wx:for="{{item.tagList}}" wx:for-item="tag" wx:key="*this">{{tag}}</text>
+        </view>
+        <view class="dcard-meta">
+          <text wx:if="{{scope === 'all'}}">{{item.kitchenName || '另一个厨房'}}</text>
+          <text wx:if="{{!item.is_available}}" class="dim">已下架</text>
+        </view>
+      </view>
+      <view class="dcard-go">查看</view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view wx:if="{{kitchens.length === 0}}" class="hint">没找到叫这个的厨房</view>
+    <view
+      class="kcard"
+      wx:for="{{kitchens}}"
+      wx:key="id"
+      bindtap="openKitchen"
+      data-id="{{item.id}}"
+    >
+      <view class="kcard-avatar">{{item.initial}}</view>
+      <view class="kcard-main">
+        <view class="kcard-name">
+          {{item.name}}
+          <text wx:if="{{item.mineText}}" class="tag">{{item.mineText}}</text>
+          <text class="tag tag-soft">{{item.scopeText}}</text>
+        </view>
+        <view class="kcard-sub">{{item.description || '这个厨房还没有写简介'}}</view>
+      </view>
+      <view class="kcard-go">看菜单</view>
+    </view>
+  </block>
+</view>

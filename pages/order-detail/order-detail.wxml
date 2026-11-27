@@ -1,0 +1,74 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="empty">正在加载…</view>
+  <view wx:elif="{{error}}" class="empty">{{error}}</view>
+
+  <block wx:else>
+    <view class="head">
+      <view class="head-status st-{{statusTone}}">{{statusText}}</view>
+      <view class="head-hint">{{statusHint}}</view>
+      <view wx:if="{{order.status === 'rejected'}}" class="head-sub">大厨说这单做不了</view>
+    </view>
+
+    <view class="panel">
+      <view class="row">
+        <view class="row-k">厨房</view>
+        <view class="row-v">{{kitchenName || '这个厨房'}}</view>
+      </view>
+      <view class="row">
+        <view class="row-k">点菜人</view>
+        <view class="row-v">{{order.diner_name}}</view>
+      </view>
+      <view class="row">
+        <view class="row-k">想吃时间</view>
+        <view class="row-v">{{mealTimeText}}</view>
+      </view>
+      <view class="row">
+        <view class="row-k">下单时间</view>
+        <view class="row-v">{{createdAtText}}</view>
+      </view>
+      <view wx:if="{{order.note}}" class="row row-block">
+        <view class="row-k">备注</view>
+        <view class="row-note">{{order.note}}</view>
+      </view>
+      <view wx:if="{{order.reject_reason}}" class="row row-block">
+        <view class="row-k">大厨回复</view>
+        <view class="row-note row-note-red">{{order.reject_reason}}</view>
+      </view>
+    </view>
+
+    <view class="panel">
+      <view class="panel-title">{{items.length}} 道菜 · 共 {{total}} 份</view>
+      <view class="item" wx:for="{{items}}" wx:key="id">
+        <view class="item-name">{{item.dish_name}}</view>
+        <view class="item-qty">×{{item.quantity}}</view>
+      </view>
+    </view>
+
+    <view class="panel">
+      <view class="panel-title">进度</view>
+      <view class="step {{item.done ? 'step-on' : ''}}" wx:for="{{steps}}" wx:key="key">
+        <view class="dot"></view>
+        <view class="step-main">
+          <view class="step-label">{{item.label}}</view>
+          <view wx:if="{{item.done && item.atText}}" class="step-time">{{item.atText}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="actions">
+      <block wx:if="{{isChef && order.status === 'pending'}}">
+        <view wx:if="{{!order.acked_at}}" class="btn-ghost" bindtap="ack">先回一句「收到」</view>
+        <view class="btn-primary" bindtap="accept">{{busy ? '处理中…' : '接单，开始做'}}</view>
+        <view class="btn-danger" bindtap="reject">这单做不了</view>
+      </block>
+      <block wx:if="{{isChef && order.status === 'accepted'}}">
+        <view class="btn-primary" bindtap="finish">{{busy ? '处理中…' : '已出餐'}}</view>
+      </block>
+      <block wx:if="{{isMine && order.status === 'pending'}}">
+        <view class="btn-danger" bindtap="cancel">撤销这一单</view>
+      </block>
+      <view class="btn-ghost" bindtap="copySummary">复制清单</view>
+      <view class="btn-ghost" bindtap="goMenu">再去这家点几道</view>
+    </view>
+  </block>
+</view>

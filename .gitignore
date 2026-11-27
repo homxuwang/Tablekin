@@ -1,0 +1,11 @@
+node_modules/
+miniprogram_npm/
+project.private.config.json
+.wbapp_*.privacy.json
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db
+.npmrc

@@ -1,0 +1,179 @@
+.page {
+  padding-bottom: 60rpx;
+}
+
+.head {
+  background: #FFFFFF;
+  padding: 44rpx 32rpx 40rpx;
+  border-radius: 0 0 32rpx 32rpx;
+}
+
+.head-status {
+  font-size: 40rpx;
+  font-weight: 600;
+}
+
+.st-wait {
+  color: #B4610F;
+}
+
+.st-ack {
+  color: #1D6FA5;
+}
+
+.st-doing {
+  color: #1D9E75;
+}
+
+.st-done {
+  color: #5C646E;
+}
+
+.st-off {
+  color: #A32D2D;
+}
+
+.head-hint {
+  font-size: 26rpx;
+  color: #8A9099;
+  margin-top: 12rpx;
+  line-height: 1.6;
+}
+
+.head-sub {
+  font-size: 26rpx;
+  color: #A32D2D;
+  margin-top: 8rpx;
+}
+
+.panel {
+  margin: 24rpx 24rpx 0;
+  padding: 8rpx 26rpx;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+}
+
+.panel-title {
+  font-size: 26rpx;
+  color: #8A9099;
+  padding: 22rpx 0 12rpx;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  border-bottom: 2rpx solid #F5F6F8;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row-block {
+  display: block;
+}
+
+.row-k {
+  font-size: 26rpx;
+  color: #8A9099;
+  flex-shrink: 0;
+}
+
+.row-v {
+  font-size: 28rpx;
+  color: #23282F;
+  text-align: right;
+  padding-left: 24rpx;
+}
+
+.row-note {
+  font-size: 27rpx;
+  color: #23282F;
+  margin-top: 12rpx;
+  line-height: 1.6;
+}
+
+.row-note-red {
+  color: #A32D2D;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18rpx 0;
+  border-bottom: 2rpx solid #F5F6F8;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.item-name {
+  font-size: 29rpx;
+  color: #23282F;
+}
+
+.item-qty {
+  font-size: 26rpx;
+  color: #8A9099;
+}
+
+/* 进度时间轴 */
+.step {
+  display: flex;
+  align-items: flex-start;
+  padding-bottom: 26rpx;
+  position: relative;
+}
+
+.step:last-child {
+  padding-bottom: 8rpx;
+}
+
+.dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #E1E4E8;
+  margin: 8rpx 20rpx 0 0;
+  flex-shrink: 0;
+}
+
+.step-on .dot {
+  background: #E86A17;
+}
+
+.step-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.step-label {
+  font-size: 27rpx;
+  color: #B4B9C0;
+}
+
+.step-on .step-label {
+  color: #23282F;
+}
+
+.step-time {
+  font-size: 22rpx;
+  color: #A6ACB4;
+  margin-top: 6rpx;
+}
+
+.actions {
+  padding: 32rpx 32rpx 0;
+}
+
+.actions > view {
+  margin-bottom: 20rpx;
+}
+
+.actions > view:last-child {
+  margin-bottom: 0;
+}

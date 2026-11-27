@@ -1,0 +1,132 @@
+<view class="page">
+  <view class="hero">
+    <view class="hero-title">食材仓库</view>
+    <view class="hero-sub">
+      {{list.length}} 种食材<block wx:if="{{lowCount > 0}}"> · {{lowCount}} 种该补货了</block>
+    </view>
+  </view>
+
+  <view wx:if="{{error}}" class="banner">{{error}}</view>
+  <view wx:if="{{pendingStock}}" class="alert">
+    <view class="alert-title">上次库存操作待确认</view>
+    <view>{{pendingStock.ingredientName || '食材'}} · {{pendingStock.mode === 'delta' ? '入库' : '盘点'}} {{pendingStock.value}}</view>
+    <view class="tool" bindtap="retryStock">{{stockBusy ? '确认中…' : '重试确认'}}</view>
+  </view>
+
+  <view wx:if="{{lowCount > 0}}" class="alert">
+    <view class="alert-title">该补货了</view>
+    <view class="alert-chips">
+      <block wx:for="{{list}}" wx:key="id">
+        <text wx:if="{{item.low}}" class="alert-chip">{{item.name}} · {{item.stockText}}{{item.unit}}</text>
+      </block>
+    </view>
+  </view>
+
+  <view class="panel">
+    <view class="panel-head" bindtap="toggleForm">
+      <view class="panel-title">{{form.id ? '编辑食材' : '新增食材'}}</view>
+      <view class="panel-action">{{showForm ? '收起' : '展开'}}</view>
+    </view>
+    <block wx:if="{{showForm}}">
+      <view class="field">
+        <view class="field-label">名称</view>
+        <input
+          class="field-input"
+          value="{{form.name}}"
+          data-field="name"
+          bindinput="onInput"
+          placeholder="例如：五花肉"
+          maxlength="20"
+          disabled="{{saving}}"
+        />
+      </view>
+      <view class="field">
+        <view class="field-label">单位</view>
+        <input
+          class="field-input"
+          value="{{form.unit}}"
+          data-field="unit"
+          bindinput="onInput"
+          placeholder="克 / 个 / 把 / 瓶"
+          maxlength="6"
+          disabled="{{saving}}"
+        />
+      </view>
+      <view wx:if="{{!form.id}}" class="field">
+        <view class="field-label">初始库存</view>
+        <input
+          class="field-input"
+          type="digit"
+          value="{{form.stock}}"
+          data-field="stock"
+          bindinput="onInput"
+          placeholder="0"
+          disabled="{{saving}}"
+        />
+      </view>
+      <view class="field">
+        <view class="field-label">低于这个数就提醒补货</view>
+        <input
+          class="field-input"
+          type="digit"
+          value="{{form.alert_threshold}}"
+          data-field="alert_threshold"
+          bindinput="onInput"
+          placeholder="填 0 表示不提醒"
+          disabled="{{saving}}"
+        />
+      </view>
+      <view wx:if="{{form.id}}" class="field-note">要改库存请用列表里的「入库」或「盘点」，这样会留下记录。</view>
+      <view class="form-actions">
+        <view class="btn-primary {{saving ? 'disabled' : ''}}" bindtap="saveForm">{{saving ? '保存中…' : '保存'}}</view>
+      </view>
+    </block>
+  </view>
+
+  <view class="section-title">所有食材</view>
+  <view class="panel">
+    <view wx:if="{{loading}}" class="hint">正在加载…</view>
+    <view wx:elif="{{list.length === 0}}" class="hint">还没有食材。先加一个「五花肉」，再把它挂到菜品上。</view>
+    <view class="item" wx:for="{{list}}" wx:key="id">
+      <view class="item-head">
+        <view class="item-name">{{item.name}}</view>
+        <view class="item-stock">
+          <text class="stock-num {{item.low ? 'stock-low' : ''}}">{{item.stockText}}</text>
+          <text class="stock-unit">{{item.unit}}</text>
+        </view>
+      </view>
+      <view wx:if="{{item.low}}" class="item-warn">低于预警线{{item.alertText}}{{item.unit}}，记得买</view>
+      <view class="item-tools">
+        <view class="tool" bindtap="stockIn" data-id="{{item.id}}">入库</view>
+        <view class="tool" bindtap="recount" data-id="{{item.id}}">盘点</view>
+        <view class="tool" bindtap="showLogs" data-id="{{item.id}}">明细</view>
+        <view class="tool" bindtap="openEdit" data-id="{{item.id}}">编辑</view>
+        <view class="tool tool-danger" bindtap="removeItem" data-id="{{item.id}}">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <block wx:if="{{logsFor}}">
+    <view class="section-title">{{logsName}} · 库存明细</view>
+    <view class="panel">
+      <view wx:if="{{logsLoading}}" class="hint">正在加载…</view>
+      <view wx:elif="{{logs.length === 0}}" class="hint">还没有变动记录</view>
+      <view class="log" wx:for="{{logs}}" wx:key="id">
+        <view class="log-main">
+          <view class="log-reason">{{item.reason}}</view>
+          <view class="log-time">{{item.timeText}}</view>
+        </view>
+        <view class="log-change {{item.positive ? 'log-up' : 'log-down'}}">{{item.changeText}}</view>
+        <view class="log-balance">{{item.balanceText}}</view>
+      </view>
+      <view class="form-actions">
+        <view class="btn-ghost" bindtap="closeLogs">收起明细</view>
+      </view>
+    </view>
+  </block>
+
+  <view class="actions">
+    <view class="btn-primary" bindtap="openNew">+ 新增食材</view>
+    <view class="btn-ghost" bindtap="goBack">返回</view>
+  </view>
+</view>
